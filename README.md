@@ -12,6 +12,8 @@
 
 ## The Problem
 
+## The Solution
+
 ## Software Requirement Specification (SRS)
 
 ## Database Diagram
