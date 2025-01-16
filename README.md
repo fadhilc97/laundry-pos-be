@@ -10,12 +10,12 @@
 
   ![](./docs/current-flow-diagram-stage-2.png)
 
-## The Problem
+## The Problems
 
 - Sometimes, the laundry left behind some clothes that want to the next process, so it not proper the sequence and the priority
 - Sometimes, the laundry forgot the finished clothes location when the customer want to picking-up
 
-## The Solution
+## The Solutions
 
 - Need a system to remaind the estimation of clothes process based on the duration that choosen by the customer, so the laundry can order the priority to be finished
 - Need a system to update the status of the clothes, so the customer will get the notification regarding the status. The customer also can track the status using provided public webpage (seems like logistic tracking)
@@ -23,4 +23,10 @@
 
 ## Software Requirement Specification (SRS)
 
-## Database Diagram
+### Functional Requirements
+
+### Non-functional Requirements
+
+### Use Case Diagram
+
+### Database Diagram
