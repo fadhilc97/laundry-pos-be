@@ -25,7 +25,30 @@
 
 ### Functional Requirements
 
+- Stage 1: Initiate the transaction
+
+  - System able to create new transaction
+  - System able to create payment in transaction, if the customer want to pay now
+  - System able to print the receipt in transaction
+  - System able to update the clothes status in transaction
+  - System able to set the finished clothe location once the process in completed
+
+  ![](./docs/system-flow-diagram-stage-1.jpg)
+
+- Stage 2: Conclude the transaction
+
+  - System able to search the transaction
+  - System able to create payment in transaction, if the previous stage is not paid yet
+  - System able to conclude the transaction by set the pick-up date
+
+  ![](./docs/system-flow-diagram-stage-2.jpg)
+
 ### Non-functional Requirements
+
+- System able to support another language:
+  - English (default)
+  - Indonesia
+- System compatible for responsiveness in any screen sizes
 
 ### Use Case Diagram
 
