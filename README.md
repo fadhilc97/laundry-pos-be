@@ -50,6 +50,4 @@
   - Indonesia
 - System compatible for responsiveness in any screen sizes
 
-### Use Case Diagram
-
 ### Database Diagram
