@@ -33,9 +33,9 @@
 - System able to set the finished clothe location once the process in completed
 - System able to conclude the transaction by set the pick-up date
 
-![](./docs/system-flow-diagram-stage-1.jpg)
+![System Flow Diagram Stage 1](./docs/system-flow-diagram-stage-1.jpg)
 
-![](./docs/system-flow-diagram-stage-2.jpg)
+![System Flow Diagram Stage 2](./docs/system-flow-diagram-stage-2.jpg)
 
 ### Non-functional Requirements
 
@@ -45,3 +45,5 @@
 - System compatible for responsiveness in any screen sizes
 
 ### Database Diagram
+
+![Database Diagram](./docs/database-diagram.png)
