@@ -1,4 +1,12 @@
-import { integer, pgTable, varchar, serial } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  varchar,
+  serial,
+  timestamp,
+  boolean,
+} from "drizzle-orm/pg-core";
+import { Laundry } from "../laundry";
 
 export const User = pgTable("User", {
   id: serial().primaryKey(),
@@ -22,4 +30,16 @@ export const UserRole = pgTable("UserRole", {
   roleId: integer()
     .notNull()
     .references(() => Role.id),
+});
+
+export const UserLaundry = pgTable("UserLaundry", {
+  id: serial().primaryKey(),
+  userId: integer()
+    .notNull()
+    .references(() => User.id),
+  laundryId: integer()
+    .notNull()
+    .references(() => Laundry.id),
+  joinedDate: timestamp().notNull().defaultNow(),
+  isActive: boolean().notNull().default(true),
 });
