@@ -1,6 +1,6 @@
 import { integer, pgTable, varchar, serial } from "drizzle-orm/pg-core";
 
-export const UserSchema = pgTable("User", {
+export const User = pgTable("User", {
   id: serial().primaryKey(),
   name: varchar().notNull(),
   email: varchar().notNull().unique(),
@@ -8,18 +8,18 @@ export const UserSchema = pgTable("User", {
   imageUrl: varchar(),
 });
 
-export const RoleSchema = pgTable("Role", {
+export const Role = pgTable("Role", {
   id: serial().primaryKey(),
   name: varchar().notNull(),
   identifier: varchar().notNull().unique(),
 });
 
-export const UserRoleSchema = pgTable("UserRole", {
+export const UserRole = pgTable("UserRole", {
   id: serial().primaryKey(),
   userId: integer()
     .notNull()
-    .references(() => UserSchema.id),
+    .references(() => User.id),
   roleId: integer()
     .notNull()
-    .references(() => RoleSchema.id),
+    .references(() => Role.id),
 });
