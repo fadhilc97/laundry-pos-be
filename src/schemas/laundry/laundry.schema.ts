@@ -5,6 +5,7 @@ export const Laundry = pgTable("Laundry", {
   id: serial().primaryKey(),
   name: varchar().notNull(),
   address: text().notNull(),
+  imageUrl: varchar(),
 });
 
 export const LaundryContact = pgTable("LaundryContact", {
