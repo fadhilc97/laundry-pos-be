@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   integer,
   pgTable,
@@ -42,4 +43,13 @@ export const UserLaundry = pgTable("UserLaundry", {
     .references(() => Laundry.id),
   joinedDate: timestamp().notNull().defaultNow(),
   isActive: boolean().notNull().default(true),
+});
+
+export const userLaundryRelations = relations(UserLaundry, ({ one }) => {
+  return {
+    laundry: one(Laundry, {
+      fields: [UserLaundry.laundryId],
+      references: [Laundry.id],
+    }),
+  };
 });

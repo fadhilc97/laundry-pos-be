@@ -1,1 +1,2 @@
 export * from "./post-create-laundry.controller";
+export * from "./get-my-laundry.controller";
