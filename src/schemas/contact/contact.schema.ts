@@ -4,7 +4,7 @@ import { Laundry } from "../laundry";
 export const Contact = pgTable("Contact", {
   id: serial().primaryKey(),
   name: varchar().notNull(),
-  details: varchar().notNull(),
+  details: varchar(),
   laundryId: integer()
     .notNull()
     .references(() => Laundry.id),
