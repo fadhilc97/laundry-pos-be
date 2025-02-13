@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { UserSchema } from "@/schemas";
+import { User } from "@/schemas";
 import { db } from "@/services";
 import {
   generateAccessToken,
@@ -13,8 +13,8 @@ import { Request, Response } from "express";
 export async function postAuthLoginController(req: Request, res: Response) {
   const { email, password }: IPostAuthLoginDto = req.body;
 
-  const user = await db.query.UserSchema.findFirst({
-    where: eq(UserSchema.email, email),
+  const user = await db.query.User.findFirst({
+    where: eq(User.email, email),
   });
 
   if (!user) {
