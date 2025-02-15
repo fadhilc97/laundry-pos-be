@@ -20,6 +20,7 @@ export function authMiddleware(
       "auth-access-token-secret-key";
     const decoded = jwt.verify(token, secret) as IUserJwtPayload;
     req.userId = decoded.id;
+    req.userRoles = decoded.roles;
     next();
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
