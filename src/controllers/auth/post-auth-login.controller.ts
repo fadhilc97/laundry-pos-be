@@ -6,6 +6,7 @@ import {
   generateRefreshToken,
   IPostAuthLoginDto,
   IUserJwtPayload,
+  Role,
 } from "@/utils";
 import { eq } from "drizzle-orm";
 import { Request, Response } from "express";
@@ -15,6 +16,20 @@ export async function postAuthLoginController(req: Request, res: Response) {
 
   const user = await db.query.User.findFirst({
     where: eq(User.email, email),
+    with: {
+      userRoles: {
+        columns: {},
+        with: {
+          role: {
+            columns: { identifier: true },
+          },
+        },
+      },
+    },
+    columns: {
+      id: true,
+      password: true,
+    },
   });
 
   if (!user) {
@@ -28,7 +43,10 @@ export async function postAuthLoginController(req: Request, res: Response) {
     return;
   }
 
-  const jwtPayload: IUserJwtPayload = { id: user.id };
+  const jwtPayload: IUserJwtPayload = {
+    id: user.id,
+    roles: user.userRoles.map((userRole) => userRole.role.identifier) as Role[],
+  };
   const accessToken = generateAccessToken(jwtPayload);
   const refreshToken = generateRefreshToken(jwtPayload);
 

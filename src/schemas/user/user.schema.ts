@@ -45,11 +45,24 @@ export const UserLaundry = pgTable("UserLaundry", {
   isActive: boolean().notNull().default(true),
 });
 
-export const userLaundryRelations = relations(UserLaundry, ({ one }) => {
-  return {
-    laundry: one(Laundry, {
-      fields: [UserLaundry.laundryId],
-      references: [Laundry.id],
-    }),
-  };
-});
+export const userRelations = relations(User, ({ many }) => ({
+  userRoles: many(UserRole),
+}));
+
+export const userRoleRelations = relations(UserRole, ({ one }) => ({
+  user: one(User, {
+    fields: [UserRole.userId],
+    references: [User.id],
+  }),
+  role: one(Role, {
+    fields: [UserRole.roleId],
+    references: [Role.id],
+  }),
+}));
+
+export const userLaundryRelations = relations(UserLaundry, ({ one }) => ({
+  laundry: one(Laundry, {
+    fields: [UserLaundry.laundryId],
+    references: [Laundry.id],
+  }),
+}));
