@@ -1,7 +1,7 @@
 import { Currency, UserLaundry } from "@/schemas";
 import { db } from "@/services";
 import { IAuthRequest } from "@/utils";
-import { IPostCreateCurrencyDto } from "@/utils/types/dtos/master-data/currency.dto";
+import { IPostCreateCurrencyDto } from "@/utils";
 import { eq } from "drizzle-orm";
 import { Response } from "express";
 

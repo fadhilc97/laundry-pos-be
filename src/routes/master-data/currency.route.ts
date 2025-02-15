@@ -1,6 +1,7 @@
 import {
   postCreateCurrencyController,
   getListCurrencyController,
+  putUpdateCurrencyController,
 } from "@/controllers";
 import { authMiddleware, roleMiddleware } from "@/middlewares";
 import { Role } from "@/utils";
@@ -11,5 +12,7 @@ const currencyRouter = Router();
 currencyRouter.use(authMiddleware, roleMiddleware(Role.OWNER));
 currencyRouter.get("/", getListCurrencyController);
 currencyRouter.post("/", postCreateCurrencyController);
+currencyRouter.put("/:id", putUpdateCurrencyController);
+// currencyRouter.delete("/:id");
 
 export default currencyRouter;
