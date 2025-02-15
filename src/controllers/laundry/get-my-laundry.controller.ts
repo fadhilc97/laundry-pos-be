@@ -1,7 +1,7 @@
 import { IAuthRequest } from "@/utils";
 import { Response } from "express";
 import { db } from "@/services";
-import { Laundry, UserLaundry } from "@/schemas";
+import { UserLaundry } from "@/schemas";
 import { eq } from "drizzle-orm";
 
 export async function getMyLaundryController(req: IAuthRequest, res: Response) {
