@@ -2,6 +2,7 @@ import {
   postCreateCurrencyController,
   getListCurrencyController,
   putUpdateCurrencyController,
+  deleteCurrencyController,
 } from "@/controllers";
 import { authMiddleware, roleMiddleware } from "@/middlewares";
 import { Role } from "@/utils";
@@ -13,6 +14,6 @@ currencyRouter.use(authMiddleware, roleMiddleware(Role.OWNER));
 currencyRouter.get("/", getListCurrencyController);
 currencyRouter.post("/", postCreateCurrencyController);
 currencyRouter.put("/:id", putUpdateCurrencyController);
-// currencyRouter.delete("/:id");
+currencyRouter.delete("/:id", deleteCurrencyController);
 
 export default currencyRouter;

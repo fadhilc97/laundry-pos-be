@@ -1,13 +1,10 @@
-import { IAuthRequest, IPutUpdateCurrencyDto } from "@/utils";
+import { IPutUpdateCurrencyDto } from "@/utils";
 import { Currency } from "@/schemas";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { db } from "@/services";
 import { eq } from "drizzle-orm";
 
-export async function putUpdateCurrencyController(
-  req: IAuthRequest,
-  res: Response
-) {
+export async function putUpdateCurrencyController(req: Request, res: Response) {
   const { id } = req.params as { id: string };
   const { name, shortName, countryName }: IPutUpdateCurrencyDto = req.body;
 
