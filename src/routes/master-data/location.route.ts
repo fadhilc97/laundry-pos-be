@@ -2,6 +2,7 @@ import {
   getListLocationController,
   postCreateLocationController,
   putUpdateLocationController,
+  deleteLocationController,
 } from "@/controllers";
 import { authMiddleware, roleMiddleware } from "@/middlewares";
 import { Role } from "@/utils";
@@ -13,6 +14,6 @@ locationRouter.use(authMiddleware, roleMiddleware(Role.OWNER));
 locationRouter.get("/", getListLocationController);
 locationRouter.post("/", postCreateLocationController);
 locationRouter.put("/:id", putUpdateLocationController);
-// locationRouter.delete("/:id", deleteCurrencyController);
+locationRouter.delete("/:id", deleteLocationController);
 
 export default locationRouter;
