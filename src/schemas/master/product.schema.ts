@@ -10,16 +10,16 @@ import { Laundry } from "../laundry";
 import { QuantityUnit } from "./quantity-unit.schema";
 import { Currency } from "./currency.schema";
 
-export const ServiceTypesEnum = pgEnum("ServiceType", [
-  "REGULAR",
-  "EXPRESS",
-  "FLASH",
-]);
+const serviceTypes = ["REGULAR", "EXPRESS", "FLASH"] as const;
+
+export type ServiceType = (typeof serviceTypes)[number];
+
+export const ServiceTypesEnum = pgEnum("ServiceType", serviceTypes);
 
 export const Product = pgTable("Product", {
   id: serial().primaryKey(),
   name: varchar().notNull(),
-  price: decimal({ precision: 2 }).notNull().default("0.00"),
+  price: decimal().notNull().default("0.00"),
   qtyUnitId: integer()
     .notNull()
     .references(() => QuantityUnit.id),
