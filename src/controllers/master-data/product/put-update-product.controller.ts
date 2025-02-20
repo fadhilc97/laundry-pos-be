@@ -1,13 +1,10 @@
 import { Product } from "@/schemas";
 import { db } from "@/services";
-import { IAuthRequest, IPutUpdateProductDto } from "@/utils";
+import { IPutUpdateProductDto } from "@/utils";
 import { eq } from "drizzle-orm";
-import { Response } from "express";
+import { Response, Request } from "express";
 
-export async function putUpdateProductController(
-  req: IAuthRequest,
-  res: Response
-) {
+export async function putUpdateProductController(req: Request, res: Response) {
   const { id } = req.params as { id: string };
   const {
     name,
