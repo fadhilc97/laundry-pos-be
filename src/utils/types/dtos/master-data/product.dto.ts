@@ -9,4 +9,4 @@ export interface IProductDto {
 }
 
 export interface IPostCreateProductDto extends IProductDto {}
-export interface IPutCreateProductDto extends IProductDto {}
+export interface IPutUpdateProductDto extends IProductDto {}
