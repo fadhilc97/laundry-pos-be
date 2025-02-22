@@ -1,6 +1,7 @@
 interface ICurrencyDto {
   name: string;
   shortName: string;
+  symbol: string;
   countryName: string;
 }
 

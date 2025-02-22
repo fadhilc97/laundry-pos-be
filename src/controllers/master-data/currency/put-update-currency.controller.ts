@@ -6,11 +6,12 @@ import { eq } from "drizzle-orm";
 
 export async function putUpdateCurrencyController(req: Request, res: Response) {
   const { id } = req.params as { id: string };
-  const { name, shortName, countryName }: IPutUpdateCurrencyDto = req.body;
+  const { name, shortName, countryName, symbol }: IPutUpdateCurrencyDto =
+    req.body;
 
   const updatedCurrency = await db
     .update(Currency)
-    .set({ name, shortName, countryName })
+    .set({ name, shortName, countryName, symbol })
     .where(eq(Currency.id, +id));
 
   if (!updatedCurrency.rowCount) {

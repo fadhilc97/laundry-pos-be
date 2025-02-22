@@ -22,11 +22,13 @@ export async function postCreateCurrencyController(
     return;
   }
 
-  const { name, shortName, countryName }: IPostCreateCurrencyDto = req.body;
+  const { name, shortName, countryName, symbol }: IPostCreateCurrencyDto =
+    req.body;
   await db.insert(Currency).values({
     name,
     shortName,
     countryName,
+    symbol: symbol || shortName,
     laundryId: userLaundry?.laundryId,
   });
 

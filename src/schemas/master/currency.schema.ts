@@ -5,6 +5,7 @@ export const Currency = pgTable("Currency", {
   id: serial().primaryKey(),
   name: varchar().notNull(),
   shortName: varchar().notNull(),
+  symbol: varchar(),
   countryName: varchar().notNull(),
   laundryId: integer()
     .notNull()
