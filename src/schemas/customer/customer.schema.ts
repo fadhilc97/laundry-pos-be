@@ -23,7 +23,7 @@ export const CustomerContact = pgTable("CustomerContact", {
   id: serial().primaryKey(),
   customerId: integer()
     .notNull()
-    .references(() => Customer.id),
+    .references(() => Customer.id, { onDelete: "cascade" }),
   contactId: integer()
     .notNull()
     .references(() => Contact.id),
