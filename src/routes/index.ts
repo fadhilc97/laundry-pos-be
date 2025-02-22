@@ -7,6 +7,7 @@ import {
   locationRouter,
   quantityUnitRouter,
   productRouter,
+  customerRouter,
 } from "./master-data";
 
 const router = Router();
@@ -17,6 +18,7 @@ router.use("/currency", currencyRouter);
 router.use("/location", locationRouter);
 router.use("/quantity-unit", quantityUnitRouter);
 router.use("/product", productRouter);
+router.use("/customer", customerRouter);
 
 router.use(authMiddleware);
 
