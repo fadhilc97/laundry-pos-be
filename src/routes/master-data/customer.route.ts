@@ -4,6 +4,7 @@ import { Role } from "@/utils";
 import {
   getListCustomerController,
   postCreateCustomerController,
+  putUpdateCustomerController,
 } from "@/controllers";
 
 const customerRouter = Router();
@@ -11,7 +12,7 @@ const customerRouter = Router();
 customerRouter.use(authMiddleware, roleMiddleware(Role.OWNER, Role.STAFF));
 customerRouter.get("/", getListCustomerController);
 customerRouter.post("/", postCreateCustomerController);
-// customerRouter.put("/:id", putUpdateCustomerController);
+customerRouter.put("/:id", putUpdateCustomerController);
 // customerRouter.delete("/:id", deleteCustomerController);
 
 export default customerRouter;
