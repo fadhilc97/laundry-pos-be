@@ -18,6 +18,7 @@ export async function putUpdateCustomerController(
 
   if (!updatedCustomer.rowCount) {
     res.status(404).json({ message: "Customer not found" });
+    return;
   }
 
   res.status(200).json({ message: "Success update customer" });
