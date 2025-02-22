@@ -7,6 +7,7 @@ import {
   postCreateCustomerController,
   putUpdateCustomerController,
   deleteCustomerController,
+  putUpdateCustomerContactController,
 } from "@/controllers";
 
 const customerRouter = Router();
@@ -16,6 +17,10 @@ customerRouter.get("/", getListCustomerController);
 customerRouter.get("/:id", getDetailCustomerController);
 customerRouter.post("/", postCreateCustomerController);
 customerRouter.put("/:id", putUpdateCustomerController);
+customerRouter.put(
+  "/:id/contact/:contactId",
+  putUpdateCustomerContactController
+);
 customerRouter.delete("/:id", deleteCustomerController);
 
 export default customerRouter;
