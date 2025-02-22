@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { Response } from "express";
 import { UserLaundry, Customer, Contact, CustomerContact } from "@/schemas";
 import { db } from "@/services";
@@ -29,18 +29,31 @@ export async function postCreateCustomerController(
       .values({ name, address, laundryId: userLaundry.laundryId })
       .returning({ id: Customer.id });
 
-    const [createdContact] = await tx
-      .insert(Contact)
-      .values({
-        name: "WHATSAPP",
-        details: whatsappPhone,
-        laundryId: userLaundry.laundryId,
-      })
-      .returning({ id: Contact.id });
+    const foundedContact = await tx.query.Contact.findFirst({
+      where: and(
+        eq(Contact.name, "WHATSAPP"),
+        eq(Contact.details, whatsappPhone)
+      ),
+    });
+
+    let insertContactId: number;
+    if (foundedContact) {
+      insertContactId = foundedContact.id;
+    } else {
+      const [createdContact] = await tx
+        .insert(Contact)
+        .values({
+          name: "WHATSAPP",
+          details: whatsappPhone,
+          laundryId: userLaundry.laundryId,
+        })
+        .returning({ id: Contact.id });
+      insertContactId = createdContact.id;
+    }
 
     await tx.insert(CustomerContact).values({
       customerId: createdCustomer.id,
-      contactId: createdContact.id,
+      contactId: insertContactId,
     });
   });
 
