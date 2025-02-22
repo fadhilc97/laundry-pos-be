@@ -17,16 +17,26 @@ import {
 } from "../master";
 import { User } from "../user";
 
-export const TransactionStatusEnum = pgEnum("TransactionStatus", [
+const transactionStatus = [
   "DRAFT",
   "IN_PROCESS",
   "FINISHED",
   "PICKED_UP",
-]);
-export const TransactionPaymentStatusEnum = pgEnum("TransactionPaymentStatus", [
-  "UNPAID",
-  "PAID",
-]);
+] as const;
+const transactionPaymentStatus = ["UNPAID", "PAID"] as const;
+
+export type TransactionStatus = (typeof transactionStatus)[number];
+export type TransactionPaymentStatus =
+  (typeof transactionPaymentStatus)[number];
+
+export const TransactionStatusEnum = pgEnum(
+  "TransactionStatus",
+  transactionStatus
+);
+export const TransactionPaymentStatusEnum = pgEnum(
+  "TransactionPaymentStatus",
+  transactionPaymentStatus
+);
 export const PaymentStatusEnum = pgEnum("PaymentStatus", ["PENDING", "DONE"]);
 
 export const Transaction = pgTable("Transaction", {
