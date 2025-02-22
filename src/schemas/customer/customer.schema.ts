@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { Laundry } from "../laundry";
 import { Contact } from "../contact";
+import { relations } from "drizzle-orm";
 
 export const Customer = pgTable("Customer", {
   id: serial().primaryKey(),
@@ -28,3 +29,21 @@ export const CustomerContact = pgTable("CustomerContact", {
     .notNull()
     .references(() => Contact.id),
 });
+
+export const customerRelations = relations(Customer, ({ many }) => ({
+  customerContacts: many(CustomerContact),
+}));
+
+export const customerContactRelations = relations(
+  CustomerContact,
+  ({ one }) => ({
+    customer: one(Customer, {
+      fields: [CustomerContact.id],
+      references: [Customer.id],
+    }),
+    contact: one(Contact, {
+      fields: [CustomerContact.contactId],
+      references: [Contact.id],
+    }),
+  })
+);
