@@ -20,6 +20,7 @@ export const Customer = pgTable("Customer", {
 });
 
 export const CustomerContact = pgTable("CustomerContact", {
+  id: serial().primaryKey(),
   customerId: integer()
     .notNull()
     .references(() => Customer.id),
