@@ -8,9 +8,11 @@ interface ITransactionDto {
 
 interface ITransactionItemDto {
   productId: number;
+  description: string;
   qtyUnitId: number;
   currencyId: number;
   qty: number;
+  price: number;
 }
 
 export interface IPostCreateTransactionDto extends ITransactionDto {}

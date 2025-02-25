@@ -49,9 +49,9 @@ export const Transaction = pgTable("Transaction", {
   userId: integer()
     .notNull()
     .references(() => User.id),
-  checkInDate: timestamp().notNull().defaultNow(),
-  checkOutDate: timestamp(),
-  finishedDate: timestamp(),
+  checkInDate: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  checkOutDate: timestamp({ withTimezone: true }),
+  finishedDate: timestamp({ withTimezone: true }),
   serviceType: ServiceTypesEnum().notNull().default("REGULAR"),
   status: TransactionStatusEnum().notNull().default("CHECK_IN"),
   paymentStatus: TransactionPaymentStatusEnum().notNull().default("UNPAID"),
@@ -72,8 +72,8 @@ export const TransactionItem = pgTable("TransactionItem", {
     .notNull()
     .references(() => Currency.id),
   description: varchar().notNull(),
-  qty: decimal({ precision: 2 }).notNull().default("1.00"),
-  price: decimal({ precision: 2 }).notNull().default("0.00"),
+  qty: decimal().notNull().default("1.00"),
+  price: decimal().notNull().default("0.00"),
 });
 
 export const TransactionPayment = pgTable("TransactionPayment", {

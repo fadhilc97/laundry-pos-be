@@ -1,7 +1,8 @@
 import { Router } from "express";
-import authRouter from "./auth.route";
 import { authMiddleware } from "@/middlewares";
+import authRouter from "./auth.route";
 import laundryRouter from "./laundry.route";
+import transactionRouter from "./transaction.route";
 import {
   currencyRouter,
   locationRouter,
@@ -19,6 +20,7 @@ router.use("/location", locationRouter);
 router.use("/quantity-unit", quantityUnitRouter);
 router.use("/product", productRouter);
 router.use("/customer", customerRouter);
+router.use("/transaction", transactionRouter);
 
 router.use(authMiddleware);
 
