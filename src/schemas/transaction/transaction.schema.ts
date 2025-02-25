@@ -18,10 +18,10 @@ import {
 import { User } from "../user";
 
 const transactionStatus = [
-  "DRAFT",
+  "CHECK_IN",
   "IN_PROCESS",
   "FINISHED",
-  "PICKED_UP",
+  "CHECK_OUT",
 ] as const;
 const transactionPaymentStatus = ["UNPAID", "PAID"] as const;
 
@@ -53,7 +53,7 @@ export const Transaction = pgTable("Transaction", {
   checkOutDate: timestamp(),
   finishedDate: timestamp(),
   serviceType: ServiceTypesEnum().notNull().default("REGULAR"),
-  status: TransactionStatusEnum().notNull().default("DRAFT"),
+  status: TransactionStatusEnum().notNull().default("CHECK_IN"),
   paymentStatus: TransactionPaymentStatusEnum().notNull().default("UNPAID"),
 });
 
