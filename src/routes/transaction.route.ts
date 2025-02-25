@@ -10,6 +10,8 @@ const transactionRouter = Router();
 
 transactionRouter.use(authMiddleware, roleMiddleware(Role.OWNER, Role.STAFF));
 transactionRouter.get("/", getListTransactionController);
+// transactionRouter.get("/:id", getDetailTransactionController); // TODO
+// transactionRouter.put("/:id", putUpdateTransactionController); // TODO
 transactionRouter.post("/", postCreateTransactionController);
 
 export default transactionRouter;
