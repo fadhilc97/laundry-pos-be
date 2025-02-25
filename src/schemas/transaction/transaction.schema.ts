@@ -16,6 +16,7 @@ import {
   ServiceTypesEnum,
 } from "../master";
 import { User } from "../user";
+import { relations } from "drizzle-orm";
 
 const transactionStatus = [
   "CHECK_IN",
@@ -87,3 +88,21 @@ export const TransactionPayment = pgTable("TransactionPayment", {
   amount: decimal({ precision: 2 }).notNull().default("0.00"),
   status: PaymentStatusEnum().notNull().default("PENDING"),
 });
+
+export const transactionRelations = relations(Transaction, ({ many, one }) => ({
+  items: many(TransactionItem),
+  customer: one(Customer, {
+    fields: [Transaction.customerId],
+    references: [Customer.id],
+  }),
+}));
+
+export const transactionItemRelations = relations(
+  TransactionItem,
+  ({ one }) => ({
+    transaction: one(Transaction, {
+      fields: [TransactionItem.transactionId],
+      references: [Transaction.id],
+    }),
+  })
+);
