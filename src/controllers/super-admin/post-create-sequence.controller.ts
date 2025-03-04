@@ -7,9 +7,16 @@ export async function postCreateSequenceController(
   req: Request,
   res: Response
 ) {
-  const { name, minDigits, currentSequence }: IPostCreateSequenceDto = req.body;
+  const {
+    name,
+    minDigits,
+    currentSequence,
+    laundryId,
+  }: IPostCreateSequenceDto = req.body;
 
-  await db.insert(Sequence).values({ name, minDigits, currentSequence });
+  await db
+    .insert(Sequence)
+    .values({ name, minDigits, currentSequence, laundryId });
 
   res.status(201).json({ message: "Success create sequence" });
 }

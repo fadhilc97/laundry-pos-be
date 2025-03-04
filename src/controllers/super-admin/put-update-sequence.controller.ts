@@ -6,11 +6,12 @@ import { Sequence } from "@/schemas";
 
 export async function putUpdateSequenceController(req: Request, res: Response) {
   const params = req.params as { id: string };
-  const { name, minDigits, currentSequence }: IPutUpdateSequenceDto = req.body;
+  const { name, minDigits, currentSequence, laundryId }: IPutUpdateSequenceDto =
+    req.body;
 
   const updatedSequence = await db
     .update(Sequence)
-    .set({ name, minDigits, currentSequence })
+    .set({ name, minDigits, currentSequence, laundryId })
     .where(eq(Sequence.id, +params.id));
 
   if (!updatedSequence.rowCount) {
