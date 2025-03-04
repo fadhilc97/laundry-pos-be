@@ -1,5 +1,5 @@
 import { pgTable, serial, varchar, integer } from "drizzle-orm/pg-core";
-import { User } from "../user";
+import { Laundry } from "../laundry";
 import { relations } from "drizzle-orm";
 
 export const Sequence = pgTable("Sequence", {
@@ -7,9 +7,12 @@ export const Sequence = pgTable("Sequence", {
   name: varchar().notNull(),
   minDigits: integer(),
   currentSequence: integer().notNull().default(1),
-  userId: integer().references(() => User.id),
+  laundryId: integer().references(() => Laundry.id),
 });
 
 export const sequenceRelation = relations(Sequence, ({ one }) => ({
-  user: one(User, { fields: [Sequence.userId], references: [User.id] }),
+  user: one(Laundry, {
+    fields: [Sequence.laundryId],
+    references: [Laundry.id],
+  }),
 }));

@@ -1,5 +1,7 @@
 import { pgTable, serial, varchar, text, integer } from "drizzle-orm/pg-core";
 import { Contact } from "../contact";
+import { relations } from "drizzle-orm";
+import { Sequence } from "../sequence";
 
 export const Laundry = pgTable("Laundry", {
   id: serial().primaryKey(),
@@ -17,3 +19,7 @@ export const LaundryContact = pgTable("LaundryContact", {
     .notNull()
     .references(() => Contact.id),
 });
+
+export const laundryRelations = relations(Laundry, ({ one }) => ({
+  sequence: one(Sequence),
+}));
