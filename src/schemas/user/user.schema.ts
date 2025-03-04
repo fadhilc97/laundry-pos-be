@@ -8,6 +8,7 @@ import {
   boolean,
 } from "drizzle-orm/pg-core";
 import { Laundry } from "../laundry";
+import { Sequence } from "../sequence";
 
 export const User = pgTable("User", {
   id: serial().primaryKey(),
@@ -45,8 +46,9 @@ export const UserLaundry = pgTable("UserLaundry", {
   isActive: boolean().notNull().default(true),
 });
 
-export const userRelations = relations(User, ({ many }) => ({
+export const userRelations = relations(User, ({ one, many }) => ({
   userRoles: many(UserRole),
+  sequence: one(Sequence),
 }));
 
 export const userRoleRelations = relations(UserRole, ({ one }) => ({
