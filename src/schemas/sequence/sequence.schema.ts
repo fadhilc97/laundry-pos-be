@@ -1,5 +1,5 @@
 import { pgTable, serial, varchar, integer } from "drizzle-orm/pg-core";
-import { Laundry, LaundryConfig } from "../laundry";
+import { Laundry } from "../laundry";
 import { relations } from "drizzle-orm";
 
 export const Sequence = pgTable("Sequence", {
@@ -10,10 +10,9 @@ export const Sequence = pgTable("Sequence", {
   laundryId: integer().references(() => Laundry.id),
 });
 
-export const sequenceRelation = relations(Sequence, ({ one }) => ({
+export const sequenceRelations = relations(Sequence, ({ one }) => ({
   user: one(Laundry, {
     fields: [Sequence.laundryId],
     references: [Laundry.id],
   }),
-  laundryConfig: one(LaundryConfig),
 }));

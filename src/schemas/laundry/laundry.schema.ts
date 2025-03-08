@@ -12,11 +12,12 @@ export const Laundry = pgTable("Laundry", {
 
 export const LaundryConfig = pgTable("LaundryConfig", {
   id: serial().primaryKey(),
+  key: varchar().notNull(),
+  name: varchar().notNull(),
+  value: varchar().notNull(),
   laundryId: integer()
     .notNull()
     .references(() => Laundry.id),
-  transactionSequenceId: integer().references(() => Sequence.id),
-  paymentSequenceId: integer().references(() => Sequence.id),
 });
 
 export const LaundryContact = pgTable("LaundryContact", {
@@ -29,18 +30,14 @@ export const LaundryContact = pgTable("LaundryContact", {
     .references(() => Contact.id),
 });
 
-export const laundryRelations = relations(Laundry, ({ one }) => ({
+export const laundryRelations = relations(Laundry, ({ one, many }) => ({
   sequence: one(Sequence),
-  laundryConfig: one(LaundryConfig),
+  laundryConfig: many(LaundryConfig),
 }));
 
 export const laundryConfigRelations = relations(LaundryConfig, ({ one }) => ({
-  transactionSequence: one(Sequence, {
-    fields: [LaundryConfig.transactionSequenceId],
-    references: [Sequence.id],
-  }),
-  paymentSequence: one(Sequence, {
-    fields: [LaundryConfig.paymentSequenceId],
-    references: [Sequence.id],
+  transactionSequence: one(Laundry, {
+    fields: [LaundryConfig.laundryId],
+    references: [Laundry.id],
   }),
 }));
