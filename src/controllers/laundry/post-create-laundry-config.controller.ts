@@ -25,6 +25,7 @@ export async function postCreateLaundryConfigController(
 
   if (!filteredBody.length) {
     res.status(422).json({ message: "Configuration already exists" });
+    return;
   }
   await db.insert(LaundryConfig).values(filteredBody);
 
