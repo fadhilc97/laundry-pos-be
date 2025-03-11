@@ -5,6 +5,7 @@ import {
   postCreateTransactionController,
   getListTransactionController,
   getDetailTransactionController,
+  putUpdateTransactionController,
 } from "@/controllers";
 
 const transactionRouter = Router();
@@ -12,7 +13,7 @@ const transactionRouter = Router();
 transactionRouter.use(authMiddleware, roleMiddleware(Role.OWNER, Role.STAFF));
 transactionRouter.get("/", getListTransactionController);
 transactionRouter.get("/:id", getDetailTransactionController);
-// transactionRouter.put("/:id", putUpdateTransactionController); // TODO
+transactionRouter.put("/:id", putUpdateTransactionController);
 transactionRouter.post("/", postCreateTransactionController);
 
 export default transactionRouter;
