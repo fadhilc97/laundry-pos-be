@@ -1,14 +1,9 @@
 import { Response } from "express";
 import { eq, and } from "drizzle-orm";
 import { db } from "@/services";
-import {
-  Transaction,
-  TransactionItem,
-  UserLaundry,
-  LaundryConfig,
-  Sequence,
-} from "@/schemas";
+import { Transaction, TransactionItem, Sequence } from "@/schemas";
 import { IAuthRequest, IPostCreateTransactionDto } from "@/utils";
+import { getCurrentLaundrySequence } from "@/helpers";
 
 export async function postCreateTransactionController(
   req: IAuthRequest,
@@ -18,46 +13,13 @@ export async function postCreateTransactionController(
   const { customerId, serviceType, items }: IPostCreateTransactionDto =
     req.body;
 
-  const userLaundry = await db.query.UserLaundry.findFirst({
-    where: eq(UserLaundry.userId, userId),
-    columns: { laundryId: true },
-  });
-
-  if (!userLaundry) {
-    res.status(404).json({ message: "You're not registered in your laundry" });
-    return;
-  }
-
-  const laundryConfig = await db.query.LaundryConfig.findFirst({
-    where: and(
-      eq(LaundryConfig.laundryId, userLaundry.laundryId),
-      eq(LaundryConfig.key, "transaction_sequence_id")
-    ),
-    columns: { value: true },
-  });
-
-  if (!laundryConfig) {
-    res.status(404).json({
-      message:
-        "The transaction sequence is not configured to your laundry. Please contact our system support",
-    });
-    return;
-  }
-
-  const sequence = await db.query.Sequence.findFirst({
-    where: eq(Sequence.id, +laundryConfig.value),
-    columns: {
-      minDigits: true,
-      currentSequence: true,
-    },
-  });
-
+  const sequence = await getCurrentLaundrySequence(res, userId);
   if (!sequence) {
     res.status(404).json({ message: "Sequence not found" });
     return;
   }
 
-  const sequenceStringified = sequence.currentSequence.toString();
+  const sequenceStringified = sequence?.currentSequence.toString();
   const nextSequence = sequence.currentSequence + 1;
   const zerosLength = !sequence.minDigits
     ? 0
@@ -90,7 +52,7 @@ export async function postCreateTransactionController(
     await tx
       .update(Sequence)
       .set({ currentSequence: nextSequence })
-      .where(eq(Sequence.id, +laundryConfig.value));
+      .where(eq(Sequence.id, sequence.id));
   });
 
   res.status(201).json({ message: "Success create transaction" });
