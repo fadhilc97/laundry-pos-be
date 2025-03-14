@@ -13,6 +13,7 @@ export async function getDetailTransactionController(
     where: eq(Transaction.id, +id),
     with: {
       items: true,
+      payments: true,
     },
   });
 

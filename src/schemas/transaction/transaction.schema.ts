@@ -95,6 +95,7 @@ export const transactionRelations = relations(Transaction, ({ many, one }) => ({
     fields: [Transaction.customerId],
     references: [Customer.id],
   }),
+  payments: many(TransactionPayment),
 }));
 
 export const transactionItemRelations = relations(
@@ -102,6 +103,16 @@ export const transactionItemRelations = relations(
   ({ one }) => ({
     transaction: one(Transaction, {
       fields: [TransactionItem.transactionId],
+      references: [Transaction.id],
+    }),
+  })
+);
+
+export const transactionPaymentRelations = relations(
+  TransactionPayment,
+  ({ one }) => ({
+    transaction: one(Transaction, {
+      fields: [TransactionPayment.transactionId],
       references: [Transaction.id],
     }),
   })
