@@ -16,7 +16,10 @@ interface ITransactionItemDto {
 }
 
 export interface IPostCreateTransactionDto extends ITransactionDto {}
-export interface IPuUpdateTransactionDto extends ITransactionDto {}
+export interface IPutUpdateTransactionDto extends ITransactionDto {}
+export interface IPutUpdateTransactionFinishedDto {
+  locationId?: number;
+}
 export interface IPostCreateTransactionItemDto extends ITransactionItemDto {}
 export interface IPutUpdateTransactionItemDto extends ITransactionItemDto {}
 

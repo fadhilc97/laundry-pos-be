@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { db } from "@/services";
 import { Transaction } from "@/schemas";
 import { eq } from "drizzle-orm";
+import { IPutUpdateTransactionFinishedDto } from "@/utils";
 
 type TransactionAction = "IN_PROCESS" | "FINISHED" | "CHECK_OUT";
 const TRANSACTION_STATUS_FLOW = [
@@ -17,6 +18,7 @@ export async function putUpdateTransactionController(
 ) {
   const { id } = req.params as { id: string };
   const { action } = req.query as { action: TransactionAction };
+  const body: IPutUpdateTransactionFinishedDto = req.body;
 
   const transaction = await db.query.Transaction.findFirst({
     where: eq(Transaction.id, +id),
@@ -51,7 +53,9 @@ export async function putUpdateTransactionController(
       await proceedTransaction(res, transaction.id);
       break;
     case "FINISHED":
-      await finishProceedTransaction(res, transaction.id);
+      await finishProceedTransaction(res, transaction.id, {
+        locationId: body?.locationId,
+      });
       break;
     case "CHECK_OUT":
       if (transaction.paymentStatus === "UNPAID") {
@@ -77,10 +81,22 @@ async function proceedTransaction(res: Response, id: number) {
   res.status(200).json({ message: "Success proceed transaction" });
 }
 
-async function finishProceedTransaction(res: Response, id: number) {
+async function finishProceedTransaction(
+  res: Response,
+  id: number,
+  payload: { locationId?: number }
+) {
+  if (!payload.locationId) {
+    res.status(400).json({ message: "Please choose the location" });
+    return;
+  }
   await db
     .update(Transaction)
-    .set({ status: "FINISHED", finishedDate: new Date() })
+    .set({
+      status: "FINISHED",
+      finishedDate: new Date(),
+      locationId: payload.locationId,
+    })
     .where(eq(Transaction.id, id));
   res.status(200).json({ message: "Success finished transaction" });
 }
