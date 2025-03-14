@@ -11,6 +11,9 @@ export async function getDetailTransactionController(
 
   const transaction = await db.query.Transaction.findFirst({
     where: eq(Transaction.id, +id),
+    with: {
+      items: true,
+    },
   });
 
   res
