@@ -84,8 +84,8 @@ export const TransactionPayment = pgTable("TransactionPayment", {
     .references(() => Transaction.id),
   date: timestamp().notNull().defaultNow(),
   reference: varchar(),
-  paymentMethod: varchar().notNull(),
-  amount: decimal({ precision: 2 }).notNull().default("0.00"),
+  paymentMethod: varchar().notNull().default("CASH"),
+  amount: decimal().notNull().default("0.00"),
   status: PaymentStatusEnum().notNull().default("PENDING"),
 });
 
