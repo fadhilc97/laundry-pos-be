@@ -23,9 +23,11 @@ export interface IPutUpdateTransactionFinishedDto {
 export interface IPostCreateTransactionItemDto extends ITransactionItemDto {}
 export interface IPutUpdateTransactionItemDto extends ITransactionItemDto {}
 
-export interface IPutUpdateTransactionStatusDto {
-  status: TransactionStatus;
-}
 export interface IPutUpdateTransactionLocationDto {
   locationId: number;
+}
+
+export interface IPostCreateTransactionPaymentDto {
+  paymentMethod: string;
+  amount: number;
 }
