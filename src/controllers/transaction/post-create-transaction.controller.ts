@@ -13,6 +13,7 @@ export async function postCreateTransactionController(
   const { customerId, serviceType, items }: IPostCreateTransactionDto =
     req.body;
 
+  // TODO: Refactor -> move the get current and next sequence to respective helper
   const sequence = await getCurrentLaundrySequence(res, userId);
   if (!sequence) {
     res.status(404).json({ message: "Sequence not found" });
