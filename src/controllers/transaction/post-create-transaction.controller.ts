@@ -3,7 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { db } from "@/services";
 import { Transaction, TransactionItem, Sequence } from "@/schemas";
 import { IAuthRequest, IPostCreateTransactionDto } from "@/utils";
-import { getCurrentLaundrySequence } from "@/helpers";
+import { getCurrentSequence, updateNextSequence } from "@/helpers";
 
 export async function postCreateTransactionController(
   req: IAuthRequest,
@@ -13,21 +13,11 @@ export async function postCreateTransactionController(
   const { customerId, serviceType, items }: IPostCreateTransactionDto =
     req.body;
 
-  // TODO: Refactor -> move the get current and next sequence to respective helper
-  const sequence = await getCurrentLaundrySequence(res, userId);
-  if (!sequence) {
-    res.status(404).json({ message: "Sequence not found" });
-    return;
-  }
-
-  const sequenceStringified = sequence?.currentSequence.toString();
-  const nextSequence = sequence.currentSequence + 1;
-  const zerosLength = !sequence.minDigits
-    ? 0
-    : sequence.minDigits - sequenceStringified.length;
-  const transactionNo = `${new Array(zerosLength)
-    .fill("0")
-    .join("")}${sequenceStringified}`;
+  const sequence = await getCurrentSequence({
+    configKey: "transaction_sequence_id",
+    userId,
+    res,
+  });
 
   await db.transaction(async (tx) => {
     const [createdTransaction] = await tx
@@ -36,7 +26,7 @@ export async function postCreateTransactionController(
         customerId,
         serviceType,
         userId,
-        transactionNo,
+        transactionNo: sequence?.sequenceNo as string,
       })
       .returning({ id: Transaction.id });
 
@@ -50,10 +40,11 @@ export async function postCreateTransactionController(
       }))
     );
 
-    await tx
-      .update(Sequence)
-      .set({ currentSequence: nextSequence })
-      .where(eq(Sequence.id, sequence.id));
+    await updateNextSequence({
+      tx,
+      sequenceId: sequence?.sequenceId,
+      nextSequence: sequence?.nextSequence,
+    });
   });
 
   res.status(201).json({ message: "Success create transaction" });

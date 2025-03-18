@@ -8,7 +8,7 @@ import {
   TransactionPaymentStatus,
 } from "@/schemas";
 import { IPostCreateTransactionPaymentDto } from "@/utils";
-import { getCurrentPaymentSequence } from "@/helpers";
+import { getCurrentSequence, updateNextSequence } from "@/helpers";
 
 export async function postCreateTransactionPaymentController(
   req: Request,
@@ -61,20 +61,11 @@ export async function postCreateTransactionPaymentController(
     return;
   }
 
-  // TODO: Refactor -> move the get current and next sequence to respective helper
-  const sequence = await getCurrentPaymentSequence(res, transaction.userId);
-  if (!sequence) {
-    res.status(404).json({ message: "Sequence not found" });
-    return;
-  }
-  const sequenceStringified = sequence?.currentSequence.toString();
-  const nextSequence = sequence.currentSequence + 1;
-  const zerosLength = !sequence.minDigits
-    ? 0
-    : sequence.minDigits - sequenceStringified.length;
-  const paymentNo = `${new Array(zerosLength)
-    .fill("0")
-    .join("")}${sequenceStringified}`;
+  const sequence = await getCurrentSequence({
+    configKey: "payment_sequence_id",
+    userId: transaction.userId,
+    res,
+  });
 
   const change = amount - dueAmount;
 
@@ -90,7 +81,7 @@ export async function postCreateTransactionPaymentController(
       transactionId: +id,
       amount: paymentAmount.toString(),
       paymentMethod,
-      reference: paymentNo,
+      reference: sequence?.sequenceNo,
       status: "DONE",
     });
 
@@ -99,18 +90,17 @@ export async function postCreateTransactionPaymentController(
       .set({ paymentStatus })
       .where(eq(Transaction.id, +id));
 
-    await tx
-      .update(Sequence)
-      .set({ currentSequence: nextSequence })
-      .where(eq(Sequence.id, sequence.id));
+    await updateNextSequence({
+      tx,
+      nextSequence: sequence?.nextSequence as number,
+      sequenceId: sequence?.sequenceId as number,
+    });
   });
 
-  res
-    .status(201)
-    .json({
-      message: "Success create payment to this transaction",
-      data: { change },
-    });
+  res.status(201).json({
+    message: "Success create payment to this transaction",
+    data: { change },
+  });
 }
 
 async function updateTransactionPaymentStatus(
