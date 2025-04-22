@@ -53,8 +53,8 @@ export async function postAuthLoginController(req: Request, res: Response) {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "strict",
-    maxAge: 1 * 60 * 1000,
+    sameSite: "none",
+    maxAge: 1 * 60 * 60 * 1000,
   });
   res.status(201).json({ accessToken });
 }
