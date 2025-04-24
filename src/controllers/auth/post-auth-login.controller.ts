@@ -56,5 +56,5 @@ export async function postAuthLoginController(req: Request, res: Response) {
     sameSite: "none",
     maxAge: 1 * 60 * 60 * 1000,
   });
-  res.status(201).json({ accessToken });
+  res.status(201).json({ accessToken, roles: jwtPayload.roles });
 }

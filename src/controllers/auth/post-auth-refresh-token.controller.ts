@@ -23,7 +23,7 @@ export async function postAuthRefreshTokenController(
       roles,
     });
 
-    res.status(201).json({ accessToken: newAccessToken });
+    res.status(201).json({ accessToken: newAccessToken, roles });
   } catch (error) {
     res.status(403).json({ message: "Invalid refresh token" });
   }
