@@ -15,9 +15,9 @@ app.use(
     credentials: true,
   })
 );
-app.use(cookieParser());
-app.use(urlencoded({ extended: true }));
+app.use(urlencoded({ extended: false }));
 app.use(json());
+app.use(cookieParser());
 
 app.use("/api/v1", routes);
 
