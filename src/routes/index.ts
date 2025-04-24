@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { authMiddleware } from "@/middlewares";
 import authRouter from "./auth.route";
 import laundryRouter from "./laundry.route";
 import transactionRouter from "./transaction.route";
@@ -23,7 +22,5 @@ router.use("/product", productRouter);
 router.use("/customer", customerRouter);
 router.use("/transaction", transactionRouter);
 router.use("/sequence", sequenceRouter);
-
-router.use(authMiddleware);
 
 export default router;
