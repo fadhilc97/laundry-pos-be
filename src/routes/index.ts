@@ -10,6 +10,7 @@ import {
   customerRouter,
 } from "./master-data";
 import { sequenceRouter } from "./super-admin";
+import profileRouter from "./profile.route";
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use("/product", productRouter);
 router.use("/customer", customerRouter);
 router.use("/transaction", transactionRouter);
 router.use("/sequence", sequenceRouter);
+router.use("/profile", profileRouter);
 
 export default router;
