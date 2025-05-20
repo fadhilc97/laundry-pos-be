@@ -8,7 +8,6 @@ export async function getDetailTransactionController(
   res: Response
 ) {
   const { id } = req.params as { id: string };
-  console.log(TransactionItem.transactionId);
   const transaction = await db.query.Transaction.findFirst({
     extras: {
       totalTransactionAmount: sql<number>`(

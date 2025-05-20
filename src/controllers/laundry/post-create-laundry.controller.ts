@@ -8,7 +8,6 @@ export async function postCreateLaundryController(
   req: IAuthRequest,
   res: Response
 ) {
-  console.log(req);
   const { name, address, contacts }: IPostCreateLaundryDto = req.body;
 
   const userLaundry = await db.query.UserLaundry.findFirst({
