@@ -50,6 +50,9 @@ export const Transaction = pgTable("Transaction", {
   userId: integer()
     .notNull()
     .references(() => User.id),
+  currencyId: integer()
+    .notNull()
+    .references(() => Currency.id),
   checkInDate: timestamp({ withTimezone: true }).notNull().defaultNow(),
   checkOutDate: timestamp({ withTimezone: true }),
   finishedDate: timestamp({ withTimezone: true }),
@@ -69,9 +72,6 @@ export const TransactionItem = pgTable("TransactionItem", {
   qtyUnitId: integer()
     .notNull()
     .references(() => QuantityUnit.id),
-  currencyId: integer()
-    .notNull()
-    .references(() => Currency.id),
   description: varchar().notNull(),
   qty: decimal().notNull().default("1.00"),
   price: decimal().notNull().default("0.00"),
@@ -94,6 +94,10 @@ export const transactionRelations = relations(Transaction, ({ many, one }) => ({
   customer: one(Customer, {
     fields: [Transaction.customerId],
     references: [Customer.id],
+  }),
+  currency: one(Currency, {
+    fields: [Transaction.currencyId],
+    references: [Currency.id],
   }),
   payments: many(TransactionPayment),
 }));

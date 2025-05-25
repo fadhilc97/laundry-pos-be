@@ -1,7 +1,6 @@
 import { Response } from "express";
-import { eq, and } from "drizzle-orm";
 import { db } from "@/services";
-import { Transaction, TransactionItem, Sequence } from "@/schemas";
+import { Transaction, TransactionItem } from "@/schemas";
 import { IAuthRequest, IPostCreateTransactionDto } from "@/utils";
 import { getCurrentSequence, updateNextSequence } from "@/helpers";
 
@@ -10,8 +9,12 @@ export async function postCreateTransactionController(
   res: Response
 ) {
   const userId = req.userId as number;
-  const { customerId, serviceType, items }: IPostCreateTransactionDto =
-    req.body;
+  const {
+    customerId,
+    serviceType,
+    items,
+    currencyId,
+  }: IPostCreateTransactionDto = req.body;
 
   const sequence = await getCurrentSequence({
     configKey: "transaction_sequence_id",
@@ -23,6 +26,7 @@ export async function postCreateTransactionController(
     const [createdTransaction] = await tx
       .insert(Transaction)
       .values({
+        currencyId,
         customerId,
         serviceType,
         userId,

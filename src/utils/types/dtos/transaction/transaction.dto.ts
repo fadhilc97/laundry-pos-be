@@ -2,6 +2,7 @@ import { ServiceType, TransactionStatus } from "@/schemas";
 
 interface ITransactionDto {
   customerId: number;
+  currencyId: number;
   serviceType: ServiceType;
   items: ITransactionItemDto[];
 }
@@ -10,7 +11,6 @@ interface ITransactionItemDto {
   productId: number;
   description: string;
   qtyUnitId: number;
-  currencyId: number;
   qty: number;
   price: number;
 }
