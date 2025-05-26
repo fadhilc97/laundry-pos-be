@@ -109,6 +109,10 @@ export const transactionItemRelations = relations(
       fields: [TransactionItem.transactionId],
       references: [Transaction.id],
     }),
+    quantityUnit: one(QuantityUnit, {
+      fields: [TransactionItem.qtyUnitId],
+      references: [QuantityUnit.id],
+    }),
   })
 );
 

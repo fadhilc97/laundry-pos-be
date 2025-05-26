@@ -23,12 +23,34 @@ export async function getDetailTransactionController(
     },
     where: eq(Transaction.id, +id),
     with: {
-      items: true,
-      payments: true,
+      currency: true,
+      items: {
+        with: { quantityUnit: true },
+        extras: {
+          subTotal: sql`${TransactionItem.qty} * ${TransactionItem.price}`.as(
+            "subTotal"
+          ),
+        },
+      },
+      customer: {
+        with: {
+          customerContacts: {
+            with: {
+              contact: true,
+            },
+          },
+        },
+      },
     },
   });
 
-  res
-    .status(200)
-    .json({ message: "Success get detail transaction", data: transaction });
+  res.status(200).json({
+    message: "Success get detail transaction",
+    data: {
+      ...transaction,
+      pendingPaid:
+        (transaction?.totalTransactionAmount || 0) -
+        (transaction?.totalPaidAmount || 0),
+    },
+  });
 }
