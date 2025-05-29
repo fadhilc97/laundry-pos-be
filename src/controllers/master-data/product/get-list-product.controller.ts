@@ -23,6 +23,16 @@ export async function getListProductController(
 
   const products = await db.query.Product.findMany({
     where: eq(Product.laundryId, userLaundry?.laundryId),
+    columns: {
+      id: true,
+      name: true,
+      price: true,
+    },
+    with: {
+      quantityUnit: {
+        columns: { shortName: true },
+      },
+    },
   });
 
   res.status(200).json({

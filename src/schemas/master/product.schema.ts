@@ -9,6 +9,7 @@ import {
 import { Laundry } from "../laundry";
 import { QuantityUnit } from "./quantity-unit.schema";
 import { Currency } from "./currency.schema";
+import { relations } from "drizzle-orm";
 
 const serviceTypes = ["REGULAR", "EXPRESS", "FLASH"] as const;
 
@@ -31,3 +32,10 @@ export const Product = pgTable("Product", {
     .notNull()
     .references(() => Laundry.id),
 });
+
+export const ProductRelations = relations(Product, ({ one }) => ({
+  quantityUnit: one(QuantityUnit, {
+    fields: [Product.qtyUnitId],
+    references: [QuantityUnit.id],
+  }),
+}));
