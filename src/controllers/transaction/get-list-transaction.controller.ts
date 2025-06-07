@@ -1,7 +1,7 @@
 import { Currency, Customer, Transaction, TransactionItem } from "@/schemas";
 import { db } from "@/services";
 import { IAuthRequest, Role } from "@/utils";
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { Response } from "express";
 
 export async function getListTransactionController(
@@ -37,7 +37,8 @@ export async function getListTransactionController(
       Transaction.serviceType,
       Transaction.status,
       Currency.symbol
-    );
+    )
+    .orderBy(desc(Transaction.checkInDate));
 
   res
     .status(200)
