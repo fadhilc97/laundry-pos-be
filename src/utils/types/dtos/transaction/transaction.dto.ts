@@ -1,8 +1,7 @@
-import { ServiceType, TransactionStatus } from "@/schemas";
+import { ServiceType } from "@/schemas";
 
 interface ITransactionDto {
   customerId: number;
-  currencyId: number;
   serviceType: ServiceType;
   items: ITransactionItemDto[];
 }

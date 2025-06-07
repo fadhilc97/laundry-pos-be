@@ -30,7 +30,7 @@ export async function getListProductController(
     },
     with: {
       quantityUnit: {
-        columns: { shortName: true },
+        columns: { shortName: true, id: true },
       },
     },
   });
