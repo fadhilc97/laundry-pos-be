@@ -1,7 +1,7 @@
 import { Location, UserLaundry } from "@/schemas";
 import { db } from "@/services";
 import { IAuthRequest } from "@/utils";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { Response } from "express";
 
 export async function getListLocationController(
@@ -23,6 +23,8 @@ export async function getListLocationController(
 
   const locations = await db.query.Location.findMany({
     where: eq(Location.laundryId, userLaundry.laundryId),
+    columns: { id: true, name: true },
+    orderBy: asc(Location.name),
   });
 
   res.status(201).json({ message: "Success get locations", data: locations });
