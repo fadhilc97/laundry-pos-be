@@ -41,6 +41,9 @@ export async function getDetailTransactionController(
           },
         },
       },
+      location: {
+        columns: { name: true },
+      },
     },
   });
 
