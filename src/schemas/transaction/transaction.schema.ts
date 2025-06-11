@@ -54,8 +54,9 @@ export const Transaction = pgTable("Transaction", {
     .notNull()
     .references(() => Currency.id),
   checkInDate: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  checkOutDate: timestamp({ withTimezone: true }),
+  proceedDate: timestamp({ withTimezone: true }),
   finishedDate: timestamp({ withTimezone: true }),
+  checkOutDate: timestamp({ withTimezone: true }),
   serviceType: ServiceTypesEnum().notNull().default("REGULAR"),
   status: TransactionStatusEnum().notNull().default("CHECK_IN"),
   paymentStatus: TransactionPaymentStatusEnum().notNull().default("UNPAID"),
@@ -98,6 +99,10 @@ export const transactionRelations = relations(Transaction, ({ many, one }) => ({
   currency: one(Currency, {
     fields: [Transaction.currencyId],
     references: [Currency.id],
+  }),
+  location: one(Location, {
+    fields: [Transaction.locationId],
+    references: [Location.id],
   }),
   payments: many(TransactionPayment),
 }));
