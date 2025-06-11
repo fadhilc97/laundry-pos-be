@@ -76,7 +76,7 @@ export async function putUpdateTransactionController(
 async function proceedTransaction(res: Response, id: number) {
   await db
     .update(Transaction)
-    .set({ status: "IN_PROCESS" })
+    .set({ status: "IN_PROCESS", proceedDate: new Date() })
     .where(eq(Transaction.id, id));
   res.status(200).json({ message: "Success proceed transaction" });
 }
