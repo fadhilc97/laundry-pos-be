@@ -1,13 +1,18 @@
 import { Response } from "express";
-import { Product, UserLaundry } from "@/schemas";
+import { Product, ServiceType, UserLaundry } from "@/schemas";
 import { db } from "@/services";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { IAuthRequest } from "@/utils";
+
+export type Query = {
+  serviceType: ServiceType;
+};
 
 export async function getListProductController(
   req: IAuthRequest,
   res: Response
 ) {
+  const { serviceType } = req.query as Query;
   const userId = req.userId as number;
   const userLaundry = await db.query.UserLaundry.findFirst({
     where: eq(UserLaundry.userId, userId),
@@ -22,7 +27,10 @@ export async function getListProductController(
   }
 
   const products = await db.query.Product.findMany({
-    where: eq(Product.laundryId, userLaundry?.laundryId),
+    where: and(
+      eq(Product.laundryId, userLaundry?.laundryId),
+      serviceType && eq(Product.serviceType, serviceType)
+    ),
     columns: {
       id: true,
       name: true,
