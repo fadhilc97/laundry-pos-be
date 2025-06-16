@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import handlebars from "handlebars";
 
-export function getHtmlOutput<T = unknown>(templateName: string, data?: T) {
+export function getHtmlOutput<D = unknown>(templateName: string, data?: D) {
   const templateFullPath = path.join(
     __dirname,
     `templates/${templateName}.hbs`
