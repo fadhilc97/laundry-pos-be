@@ -7,7 +7,7 @@ import {
   getDetailTransactionController,
   putUpdateTransactionController,
   postCreateTransactionPaymentController,
-  getReceiptTransactionController,
+  postGenerateReceiptTransactionController,
 } from "@/controllers";
 
 const transactionRouter = Router();
@@ -18,6 +18,9 @@ transactionRouter.get("/:id", getDetailTransactionController);
 transactionRouter.put("/:id", putUpdateTransactionController);
 transactionRouter.post("/", postCreateTransactionController);
 transactionRouter.post("/:id/payment", postCreateTransactionPaymentController);
-transactionRouter.get("/:id/receipt", getReceiptTransactionController);
+transactionRouter.post(
+  "/:id/receipt",
+  postGenerateReceiptTransactionController
+);
 
 export default transactionRouter;
