@@ -1,5 +1,5 @@
 import { Transaction } from "@/schemas";
-import { db, getHtmlToPdf } from "@/services";
+import { db } from "@/services";
 import { eq } from "drizzle-orm";
 import { Request, Response } from "express";
 import path from "path";
@@ -8,7 +8,7 @@ type Params = {
   id: string;
 };
 
-export async function postGenerateReceiptTransactionController(
+export async function getDownloadTransactionReceiptController(
   req: Request,
   res: Response
 ) {
@@ -21,11 +21,8 @@ export async function postGenerateReceiptTransactionController(
   });
 
   const fileStorePath = process.env.FILESTORE_PATH as string;
-  const pdfPath = path.join(
-    fileStorePath,
-    "receipts",
-    `Receipt-${transaction?.transactionNo}.pdf`
-  );
-  await getHtmlToPdf("receipt", pdfPath);
-  res.status(200).json({ message: "Success generate receipt" });
+  const filename = `Receipt-${transaction?.transactionNo}.pdf`;
+  const pdfPath = path.join(fileStorePath, "receipts", filename);
+
+  res.download(pdfPath);
 }

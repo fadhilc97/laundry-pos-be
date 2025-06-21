@@ -8,6 +8,7 @@ import {
   putUpdateTransactionController,
   postCreateTransactionPaymentController,
   postGenerateReceiptTransactionController,
+  getDownloadTransactionReceiptController,
 } from "@/controllers";
 
 const transactionRouter = Router();
@@ -18,6 +19,7 @@ transactionRouter.get("/:id", getDetailTransactionController);
 transactionRouter.put("/:id", putUpdateTransactionController);
 transactionRouter.post("/", postCreateTransactionController);
 transactionRouter.post("/:id/payment", postCreateTransactionPaymentController);
+transactionRouter.get("/:id/receipt", getDownloadTransactionReceiptController);
 transactionRouter.post(
   "/:id/receipt",
   postGenerateReceiptTransactionController
