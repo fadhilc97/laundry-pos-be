@@ -2,9 +2,73 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Receipt</title>
+    <title>Receipt - {{transactionInfo.reference}}</title>
+    <style>
+      @page { size: 10cm auto; } * { font-family: sans-serif; margin: 0;
+      padding: 0; box-sizing: border-box; } div {font-size:14px;} body { width:
+      10cm; } hr { border-width: 0.5px; } .header, .order-info, .order-items,
+      .order-summary, .footer { padding: 6px 0; } .header h3, .header p {
+      text-align: center; } .header .header-address
+      {font-size:12px;margin-top:4px;} .header .header-contacts {font-size:
+      12px;} .order-info, .order-summary-wrapper { display: grid;
+      grid-template-columns: auto 1fr; gap: 4px 8px; width: fit-content; }
+      .order-info div { white-space: nowrap; } .order-info
+      .order-info-data::before, .order-summary-wrapper
+      .order-summary-wrapper-data::before { content: ":"; margin-right: 8px; }
+      .order-items { display: flex; flex-direction: column; gap: 8px; }
+      .order-items .order-items-row .order-items-row-subtotal { display: flex;
+      justify-content: space-between; } .order-summary { display: flex;
+      justify-content: end; } .footer { text-align: center; }
+    </style>
   </head>
   <body>
-    <h1>Testing</h1>
+    <!-- Header: Laundry name, address, contact -->
+    <div class="header">
+      <h3>{{laundry.name}}</h3>
+      <p class="header-address">{{laundry.address}}</p>
+      <p class="header-contacts">{{laundry.contactsDisplay}}</p>
+    </div>
+    <hr />
+    <!-- Order information -->
+    <div class="order-info">
+      <div>Order No</div>
+      <div class="order-info-data">{{transactionInfo.reference}}</div>
+      <div>Date</div>
+      <div class="order-info-data">{{transactionInfo.date}}</div>
+      <div>Service Type</div>
+      <div class="order-info-data">{{transactionInfo.serviceType}}</div>
+      <div>Customer Name</div>
+      <div class="order-info-data">{{transactionInfo.customerName}}</div>
+      <div>Customer Contact</div>
+      <div class="order-info-data">{{transactionInfo.customerContact}}</div>
+    </div>
+    <hr />
+    <!-- Order items -->
+    <div class="order-items">
+      {{#each items}}
+        <div class="order-items-row">
+          <p>{{this.description}}</p>
+          <div class="order-items-row-subtotal">
+            <p>{{this.qty}} {{this.qtyUnit}} &times; {{this.price}}</p>
+            <p>{{this.subTotal}}</p>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+    <hr />
+    <!-- Order amount and payment summary -->
+    <div class="order-summary">
+      <div class="order-summary-wrapper">
+        <div>Total</div>
+        <div class="order-summary-wrapper-data">{{summary.total}}</div>
+        <div>Paid</div>
+        <div class="order-summary-wrapper-data">{{summary.paid}}</div>
+        <div>Pending</div>
+        <div class="order-summary-wrapper-data">{{summary.pending}}</div>
+      </div>
+    </div>
+    <hr />
+    <!-- Footer: Just say "Thank You" -->
+    <h3 class="footer">Thank you</h3>
   </body>
 </html>
