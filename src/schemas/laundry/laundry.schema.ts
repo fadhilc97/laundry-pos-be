@@ -33,11 +33,23 @@ export const LaundryContact = pgTable("LaundryContact", {
 export const laundryRelations = relations(Laundry, ({ one, many }) => ({
   sequence: one(Sequence),
   laundryConfig: many(LaundryConfig),
+  laundryContacts: many(LaundryContact),
 }));
 
 export const laundryConfigRelations = relations(LaundryConfig, ({ one }) => ({
   transactionSequence: one(Laundry, {
     fields: [LaundryConfig.laundryId],
+    references: [Laundry.id],
+  }),
+}));
+
+export const laundryContactRelations = relations(LaundryContact, ({ one }) => ({
+  contact: one(Contact, {
+    fields: [LaundryContact.contactId],
+    references: [Contact.id],
+  }),
+  laundry: one(Laundry, {
+    fields: [LaundryContact.laundryId],
     references: [Laundry.id],
   }),
 }));
