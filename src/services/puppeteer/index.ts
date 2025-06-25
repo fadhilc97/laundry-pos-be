@@ -15,9 +15,9 @@ export async function getHtmlToPdf<D = unknown>(
 
   await page.pdf({
     path: outputPdfPath,
-    format: "A4",
     printBackground: true,
-    margin: { top: "40px", bottom: "40px", left: "40px", right: "40px" },
+    margin: { top: "10px", bottom: "10px", left: "10px", right: "10px" },
+    ...(!options?.width && !options?.height && { format: "A4" }),
     ...options,
   });
 
