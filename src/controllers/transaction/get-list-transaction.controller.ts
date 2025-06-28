@@ -1,4 +1,10 @@
-import { Currency, Customer, Transaction, TransactionItem } from "@/schemas";
+import {
+  Currency,
+  Customer,
+  Transaction,
+  TransactionItem,
+  TransactionPayment,
+} from "@/schemas";
 import { db } from "@/services";
 import { IAuthRequest, Role } from "@/utils";
 import { desc, eq, sql } from "drizzle-orm";
@@ -9,6 +15,12 @@ export async function getListTransactionController(
   res: Response
 ) {
   const isStaff = req.userRoles?.includes(Role.STAFF);
+  const paymentSql = sql<number>`(
+    SELECT COALESCE(SUM(${TransactionItem.qty} * ${TransactionItem.price}) - SUM(${TransactionPayment.amount}), 0)
+        FROM ${TransactionPayment}
+        WHERE ${TransactionPayment.status} = 'DONE'
+          AND ${TransactionPayment.transactionId} = ${Transaction.id}
+  )`;
   const transactions = await db
     .select({
       id: Transaction.id,
@@ -20,6 +32,7 @@ export async function getListTransactionController(
       paymentStatus: Transaction.paymentStatus,
       totalAmount: sql<number>`COALESCE(SUM(${TransactionItem.qty} * ${TransactionItem.price}),0)`,
       currency: Currency.symbol,
+      totalPendingPaidAmount: paymentSql,
     })
     .from(Transaction)
     .innerJoin(Customer, eq(Transaction.customerId, Customer.id))
