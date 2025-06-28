@@ -1,19 +1,32 @@
 import {
   Currency,
   Customer,
+  ServiceType,
   Transaction,
   TransactionItem,
   TransactionPayment,
+  TransactionPaymentStatus,
+  TransactionStatus,
 } from "@/schemas";
 import { db } from "@/services";
 import { IAuthRequest, Role } from "@/utils";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, gte, ilike, lte, or, sql } from "drizzle-orm";
 import { Response } from "express";
+
+type Query = {
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+  serviceType?: ServiceType;
+  transactionStatus?: TransactionStatus;
+  paymentStatus?: TransactionPaymentStatus;
+};
 
 export async function getListTransactionController(
   req: IAuthRequest,
   res: Response
 ) {
+  const query: Query = req.query;
   const isStaff = req.userRoles?.includes(Role.STAFF);
   const paymentSql = sql<number>`(
     SELECT COALESCE(SUM(${TransactionItem.qty} * ${TransactionItem.price}) - SUM(${TransactionPayment.amount}), 0)
@@ -41,7 +54,12 @@ export async function getListTransactionController(
       TransactionItem,
       eq(Transaction.id, TransactionItem.transactionId)
     )
-    .where(isStaff ? eq(Transaction.userId, req.userId as number) : undefined)
+    .where(
+      and(
+        isStaff ? eq(Transaction.userId, req.userId as number) : undefined,
+        ...getSqlFilterParams(query)
+      )
+    )
     .groupBy(
       Transaction.id,
       Transaction.transactionNo,
@@ -56,4 +74,30 @@ export async function getListTransactionController(
   res
     .status(200)
     .json({ message: "Success get transaction list", data: transactions });
+}
+
+function getSqlFilterParams(query: Query) {
+  return [
+    query.search
+      ? or(
+          ilike(Transaction.transactionNo, `%${query.search}%`),
+          ilike(Customer.name, `%${query.search}%`)
+        )
+      : undefined,
+    query.startDate
+      ? gte(Transaction.checkInDate, new Date(`${query.startDate} 00:00:00`))
+      : undefined,
+    query.endDate
+      ? lte(Transaction.checkInDate, new Date(`${query.endDate} 00:00:00`))
+      : undefined,
+    query.serviceType
+      ? eq(Transaction.serviceType, query.serviceType)
+      : undefined,
+    query.transactionStatus
+      ? eq(Transaction.status, query.transactionStatus)
+      : undefined,
+    query.paymentStatus
+      ? eq(Transaction.paymentStatus, query.paymentStatus)
+      : undefined,
+  ];
 }
