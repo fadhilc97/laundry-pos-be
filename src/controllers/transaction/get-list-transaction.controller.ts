@@ -9,7 +9,7 @@ import {
   TransactionStatus,
 } from "@/schemas";
 import { db } from "@/services";
-import { IAuthRequest, Role } from "@/utils";
+import { IAuthRequest, PaginationQuery, Role } from "@/utils";
 import { and, desc, eq, gte, ilike, lte, or, sql } from "drizzle-orm";
 import { Response } from "express";
 
@@ -20,7 +20,7 @@ type Query = {
   serviceType?: ServiceType;
   transactionStatus?: TransactionStatus;
   paymentStatus?: TransactionPaymentStatus;
-};
+} & PaginationQuery;
 
 export async function getListTransactionController(
   req: IAuthRequest,
@@ -69,7 +69,9 @@ export async function getListTransactionController(
       Transaction.status,
       Currency.symbol
     )
-    .orderBy(desc(Transaction.checkInDate));
+    .orderBy(desc(Transaction.checkInDate))
+    .limit(+(query.limit || "10"))
+    .offset((+(query.page || "1") - 1) * +(query.limit || "10"));
 
   res
     .status(200)
