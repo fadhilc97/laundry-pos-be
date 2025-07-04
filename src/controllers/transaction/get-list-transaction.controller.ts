@@ -27,7 +27,7 @@ export async function getListTransactionController(
   res: Response
 ) {
   const query: Query = req.query;
-  const limit = +(query.limit || "5");
+  const limit = +(query.limit || "10");
   const page = +(query.page || "1");
 
   const isStaff = req.userRoles?.includes(Role.STAFF);
