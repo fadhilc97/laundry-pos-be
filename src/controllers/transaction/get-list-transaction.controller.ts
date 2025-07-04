@@ -27,6 +27,9 @@ export async function getListTransactionController(
   res: Response
 ) {
   const query: Query = req.query;
+  const limit = +(query.limit || "5");
+  const page = +(query.page || "1");
+
   const isStaff = req.userRoles?.includes(Role.STAFF);
   const paymentSql = sql<number>`(
     SELECT COALESCE(SUM(${TransactionItem.qty} * ${TransactionItem.price}) - SUM(${TransactionPayment.amount}), 0)
@@ -70,8 +73,8 @@ export async function getListTransactionController(
       Currency.symbol
     )
     .orderBy(desc(Transaction.checkInDate))
-    .limit(+(query.limit || "10"))
-    .offset((+(query.page || "1") - 1) * +(query.limit || "10"));
+    .limit(limit)
+    .offset((page - 1) * limit);
 
   res
     .status(200)
