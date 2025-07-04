@@ -76,9 +76,29 @@ export async function getListTransactionController(
     .limit(limit)
     .offset((page - 1) * limit);
 
-  res
-    .status(200)
-    .json({ message: "Success get transaction list", data: transactions });
+  const [{ count }] = await db
+    .select({ count: sql<number>`COUNT(DISTINCT ${Transaction.id})` })
+    .from(Transaction)
+    .innerJoin(Customer, eq(Transaction.customerId, Customer.id))
+    .where(
+      and(
+        isStaff ? eq(Transaction.userId, req.userId as number) : undefined,
+        ...getSqlFilterParams(query)
+      )
+    );
+
+  const lastPage = Math.max(1, Math.ceil(count / limit));
+
+  res.status(200).json({
+    message: "Success get transaction list",
+    data: transactions,
+    metadata: {
+      pagination: {
+        page,
+        lastPage,
+      },
+    },
+  });
 }
 
 function getSqlFilterParams(query: Query) {
