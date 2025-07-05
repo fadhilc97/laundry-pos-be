@@ -17,12 +17,17 @@ export async function getDownloadTransactionReceiptController(
     where: eq(Transaction.id, +id),
     columns: {
       transactionNo: true,
+      receiptPath: true,
     },
   });
 
+  if (!transaction?.receiptPath) {
+    res.status(404).json({ message: "Receipt not found!" });
+    return;
+  }
+
   const fileStorePath = process.env.FILESTORE_PATH as string;
-  const filename = `Receipt-${transaction?.transactionNo}.pdf`;
-  const pdfPath = path.join(fileStorePath, "receipts", filename);
+  const pdfPath = path.join(fileStorePath, transaction?.receiptPath);
 
   res.download(pdfPath);
 }
