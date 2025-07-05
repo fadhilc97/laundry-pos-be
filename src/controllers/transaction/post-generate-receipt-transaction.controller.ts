@@ -16,8 +16,16 @@ export async function postGenerateReceiptTransactionController(
   res: Response
 ) {
   const { id } = req.params as Params;
+  await generateReceiptTransaction(+id, req.userId as number);
+  res.status(200).json({ message: "Success generate receipt" });
+}
+
+export async function generateReceiptTransaction(
+  transactionId: number,
+  userId: number
+) {
   const transaction = await db.query.Transaction.findFirst({
-    where: eq(Transaction.id, +id),
+    where: eq(Transaction.id, transactionId),
     columns: {
       transactionNo: true,
     },
@@ -29,12 +37,11 @@ export async function postGenerateReceiptTransactionController(
     "receipts",
     `Receipt-${transaction?.transactionNo}.pdf`
   );
-  const receiptData = await getReceiptData(req.userId as number, +id);
+  const receiptData = await getReceiptData(userId, transactionId);
   await getHtmlToPdf<IReceiptTemplateData>("receipt", pdfPath, receiptData, {
     width: "10cm",
     preferCSSPageSize: true,
   });
-  res.status(200).json({ message: "Success generate receipt" });
 }
 
 async function getReceiptData(
