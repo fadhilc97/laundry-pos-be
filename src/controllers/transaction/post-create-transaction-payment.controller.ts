@@ -2,13 +2,13 @@ import { Request, Response } from "express";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/services";
 import {
-  Sequence,
   Transaction,
   TransactionPayment,
   TransactionPaymentStatus,
 } from "@/schemas";
 import { IPostCreateTransactionPaymentDto } from "@/utils";
 import { getCurrentSequence, updateNextSequence } from "@/helpers";
+import { generateReceiptTransaction } from ".";
 
 export async function postCreateTransactionPaymentController(
   req: Request,
@@ -96,6 +96,8 @@ export async function postCreateTransactionPaymentController(
       sequenceId: sequence?.sequenceId as number,
     });
   });
+
+  generateReceiptTransaction(transaction.id, transaction.userId);
 
   res.status(201).json({
     message: "Success create payment to this transaction",
