@@ -7,6 +7,8 @@ import {
   updateNextSequence,
   getCurrentLaundryCurrency,
 } from "@/helpers";
+import { generateReceiptTransaction } from "./post-generate-receipt-transaction.controller";
+import { eq } from "drizzle-orm";
 
 export async function postCreateTransactionController(
   req: IAuthRequest,
@@ -58,6 +60,10 @@ export async function postCreateTransactionController(
       nextSequence: sequence?.nextSequence,
     });
   });
+
+  if (createdTransactionId) {
+    generateReceiptTransaction(createdTransactionId, userId);
+  }
 
   res.status(201).json({
     data: { transactionId: createdTransactionId },

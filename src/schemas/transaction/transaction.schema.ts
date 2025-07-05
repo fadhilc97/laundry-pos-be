@@ -60,6 +60,7 @@ export const Transaction = pgTable("Transaction", {
   serviceType: ServiceTypesEnum().notNull().default("REGULAR"),
   status: TransactionStatusEnum().notNull().default("CHECK_IN"),
   paymentStatus: TransactionPaymentStatusEnum().notNull().default("UNPAID"),
+  receiptPath: varchar(),
 });
 
 export const TransactionItem = pgTable("TransactionItem", {

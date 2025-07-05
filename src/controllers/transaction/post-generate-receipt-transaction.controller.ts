@@ -32,16 +32,18 @@ export async function generateReceiptTransaction(
   });
 
   const fileStorePath = process.env.FILESTORE_PATH as string;
-  const pdfPath = path.join(
-    fileStorePath,
-    "receipts",
-    `Receipt-${transaction?.transactionNo}.pdf`
-  );
+  const receiptPath = `receipts/Receipt-${transaction?.transactionNo}.pdf`;
+  const pdfPath = path.join(fileStorePath, receiptPath);
   const receiptData = await getReceiptData(userId, transactionId);
   await getHtmlToPdf<IReceiptTemplateData>("receipt", pdfPath, receiptData, {
     width: "10cm",
     preferCSSPageSize: true,
   });
+
+  await db
+    .update(Transaction)
+    .set({ receiptPath })
+    .where(eq(Transaction.id, transactionId));
 }
 
 async function getReceiptData(
