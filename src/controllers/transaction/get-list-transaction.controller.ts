@@ -7,10 +7,16 @@ import {
   TransactionPayment,
   TransactionPaymentStatus,
   TransactionStatus,
+  UserLaundry,
 } from "@/schemas";
 import { db } from "@/services";
-import { IAuthRequest, PaginationQuery, Role } from "@/utils";
-import { and, desc, eq, gte, ilike, lte, or, sql } from "drizzle-orm";
+import {
+  getUserLaundryShared,
+  IAuthRequest,
+  PaginationQuery,
+  Role,
+} from "@/utils";
+import { and, desc, eq, gte, ilike, inArray, lte, or, sql } from "drizzle-orm";
 import { Response } from "express";
 
 type Query = {
@@ -30,7 +36,11 @@ export async function getListTransactionController(
   const limit = +(query.limit || "10");
   const page = +(query.page || "1");
 
-  const isStaff = req.userRoles?.includes(Role.STAFF);
+  const userLaundry = await getUserLaundryShared(req.userId as number);
+  const laundryUserIds =
+    userLaundry?.laundry.laundryUsers.map((laundryUser) => laundryUser.id) ||
+    [];
+
   const paymentSql = sql<number>`(
     SELECT COALESCE(SUM(${TransactionItem.qty} * ${TransactionItem.price}) - SUM(${TransactionPayment.amount}), 0)
         FROM ${TransactionPayment}
@@ -59,7 +69,7 @@ export async function getListTransactionController(
     )
     .where(
       and(
-        isStaff ? eq(Transaction.userId, req.userId as number) : undefined,
+        inArray(Transaction.userId, laundryUserIds),
         ...getSqlFilterParams(query)
       )
     )
@@ -82,7 +92,7 @@ export async function getListTransactionController(
     .innerJoin(Customer, eq(Transaction.customerId, Customer.id))
     .where(
       and(
-        isStaff ? eq(Transaction.userId, req.userId as number) : undefined,
+        inArray(Transaction.userId, laundryUserIds),
         ...getSqlFilterParams(query)
       )
     );

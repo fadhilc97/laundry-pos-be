@@ -2,6 +2,7 @@ import { pgTable, serial, varchar, text, integer } from "drizzle-orm/pg-core";
 import { Contact } from "../contact";
 import { relations } from "drizzle-orm";
 import { Sequence } from "../sequence";
+import { UserLaundry } from "../user";
 
 export const Laundry = pgTable("Laundry", {
   id: serial().primaryKey(),
@@ -34,6 +35,7 @@ export const laundryRelations = relations(Laundry, ({ one, many }) => ({
   sequence: one(Sequence),
   laundryConfig: many(LaundryConfig),
   laundryContacts: many(LaundryContact),
+  laundryUsers: many(UserLaundry),
 }));
 
 export const laundryConfigRelations = relations(LaundryConfig, ({ one }) => ({
