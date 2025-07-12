@@ -8,6 +8,7 @@ import {
   quantityUnitRouter,
   productRouter,
   customerRouter,
+  userRouter,
 } from "./master-data";
 import { sequenceRouter } from "./super-admin";
 import profileRouter from "./profile.route";
@@ -26,5 +27,6 @@ router.use("/customer", customerRouter);
 router.use("/transaction", transactionRouter);
 router.use("/sequence", sequenceRouter);
 router.use("/profile", profileRouter);
+router.use("/user", userRouter);
 
 export default router;
