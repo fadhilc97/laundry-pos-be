@@ -1,7 +1,7 @@
 import { Transaction, TransactionItem, TransactionPayment } from "@/schemas";
 import { db } from "@/services";
-import { IAuthRequest, Role } from "@/utils";
-import { eq, SQL, sql } from "drizzle-orm";
+import { getUserLaundryShared, IAuthRequest, Role } from "@/utils";
+import { eq, inArray, SQL, sql } from "drizzle-orm";
 import { Response } from "express";
 
 export async function getDashboardDataController(
@@ -11,8 +11,13 @@ export async function getDashboardDataController(
   const userId = req.userId;
   const roles = req.userRoles;
 
-  const transactionCount = await getTransactionCount(userId, roles);
-  const paymentAggregate = await getPaymentAggregate(userId, roles);
+  const userLaundry = await getUserLaundryShared(req.userId as number);
+  const laundryUserIds =
+    userLaundry?.laundry.laundryUsers.map((laundryUser) => laundryUser.id) ||
+    [];
+
+  const transactionCount = await getTransactionCount(laundryUserIds, roles);
+  const paymentAggregate = await getPaymentAggregate(laundryUserIds, roles);
 
   res.status(200).json({
     message: "Success get dashboard data",
@@ -23,10 +28,10 @@ export async function getDashboardDataController(
   });
 }
 
-async function getTransactionCount(userId?: number, roles?: Role[]) {
+async function getTransactionCount(laundryUserIds: number[], roles?: Role[]) {
   let whereParams: SQL | undefined = undefined;
-  if (roles?.includes(Role.STAFF)) {
-    whereParams = eq(Transaction.userId, userId as number);
+  if (roles?.includes(Role.STAFF) || roles?.includes(Role.OWNER)) {
+    whereParams = inArray(Transaction.userId, laundryUserIds);
   }
 
   return await db
@@ -39,10 +44,10 @@ async function getTransactionCount(userId?: number, roles?: Role[]) {
     .where(whereParams);
 }
 
-async function getPaymentAggregate(userId?: number, roles?: Role[]) {
+async function getPaymentAggregate(laundryUserIds: number[], roles?: Role[]) {
   let whereParams: SQL | undefined = undefined;
-  if (roles?.includes(Role.STAFF)) {
-    whereParams = eq(Transaction.userId, userId as number);
+  if (roles?.includes(Role.STAFF) || roles?.includes(Role.OWNER)) {
+    whereParams = inArray(Transaction.userId, laundryUserIds);
   }
 
   const [{ sumAmount }] = await db
@@ -50,6 +55,7 @@ async function getPaymentAggregate(userId?: number, roles?: Role[]) {
       sumAmount: sql<number>`CAST(COALESCE(SUM(${TransactionItem.qty} * ${TransactionItem.price}),0) AS INT)`,
     })
     .from(TransactionItem)
+    .innerJoin(Transaction, eq(Transaction.id, TransactionItem.transactionId))
     .where(whereParams);
 
   const [{ sumPaidAmount }] = await db
@@ -57,6 +63,10 @@ async function getPaymentAggregate(userId?: number, roles?: Role[]) {
       sumPaidAmount: sql<number>`CAST(COALESCE(SUM(${TransactionPayment.amount}), 0) AS INT)`,
     })
     .from(TransactionPayment)
+    .innerJoin(
+      Transaction,
+      eq(Transaction.id, TransactionPayment.transactionId)
+    )
     .where(whereParams);
 
   return {
