@@ -4,3 +4,4 @@ export * from "./master-data";
 export * from "./transaction";
 export * from "./super-admin";
 export * from "./profile";
+export * from "./dashboard";

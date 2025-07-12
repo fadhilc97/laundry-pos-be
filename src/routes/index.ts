@@ -11,10 +11,12 @@ import {
 } from "./master-data";
 import { sequenceRouter } from "./super-admin";
 import profileRouter from "./profile.route";
+import dashboardRouter from "./dashboard.route";
 
 const router = Router();
 
 router.use("/auth", authRouter);
+router.use("/dashboard", dashboardRouter);
 router.use("/laundry", laundryRouter);
 router.use("/currency", currencyRouter);
 router.use("/location", locationRouter);
