@@ -3,7 +3,7 @@ export interface IUserDto {
   email: string;
   password: string;
   roleIds: number[];
-  laundryId: number;
+  laundryId?: number;
 }
 
 export interface IPostCreateUserDto extends IUserDto {}

@@ -57,10 +57,12 @@ export async function postCreateUserController(
       .returning({ id: User.id });
 
     // 2.2. Connect the created user to laundry
-    await tx.insert(UserLaundry).values({
-      userId: createdUser.id,
-      laundryId,
-    });
+    if (laundryId) {
+      await tx.insert(UserLaundry).values({
+        userId: createdUser.id,
+        laundryId,
+      });
+    }
 
     // 2.3. Connect the created user to roles
     await tx.insert(UserRole).values(
