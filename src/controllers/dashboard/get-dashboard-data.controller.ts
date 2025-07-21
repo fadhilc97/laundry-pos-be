@@ -11,10 +11,11 @@ export async function getDashboardDataController(
   const userId = req.userId;
   const roles = req.userRoles;
 
-  const userLaundry = await getUserLaundryShared(req.userId as number);
+  const userLaundry = await getUserLaundryShared(userId as number);
   const laundryUserIds =
-    userLaundry?.laundry.laundryUsers.map((laundryUser) => laundryUser.id) ||
-    [];
+    userLaundry?.laundry.laundryUsers.map(
+      (laundryUser) => laundryUser.userId
+    ) || [];
 
   const transactionCount = await getTransactionCount(laundryUserIds, roles);
   const paymentAggregate = await getPaymentAggregate(laundryUserIds, roles);

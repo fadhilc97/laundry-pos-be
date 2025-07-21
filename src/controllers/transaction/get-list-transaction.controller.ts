@@ -7,15 +7,9 @@ import {
   TransactionPayment,
   TransactionPaymentStatus,
   TransactionStatus,
-  UserLaundry,
 } from "@/schemas";
 import { db } from "@/services";
-import {
-  getUserLaundryShared,
-  IAuthRequest,
-  PaginationQuery,
-  Role,
-} from "@/utils";
+import { getUserLaundryShared, IAuthRequest, PaginationQuery } from "@/utils";
 import { and, desc, eq, gte, ilike, inArray, lte, or, sql } from "drizzle-orm";
 import { Response } from "express";
 
@@ -38,8 +32,9 @@ export async function getListTransactionController(
 
   const userLaundry = await getUserLaundryShared(req.userId as number);
   const laundryUserIds =
-    userLaundry?.laundry.laundryUsers.map((laundryUser) => laundryUser.id) ||
-    [];
+    userLaundry?.laundry.laundryUsers.map(
+      (laundryUser) => laundryUser.userId
+    ) || [];
 
   const paymentSql = sql<number>`(
     SELECT COALESCE(SUM(${TransactionItem.qty} * ${TransactionItem.price}) - SUM(${TransactionPayment.amount}), 0)

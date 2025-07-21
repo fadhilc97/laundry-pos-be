@@ -10,7 +10,7 @@ export async function getUserLaundryShared(userId: number) {
         with: {
           laundryUsers: {
             columns: {
-              id: true,
+              userId: true,
             },
           },
         },
