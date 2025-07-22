@@ -1,3 +1,4 @@
+import "module-alias/register";
 import express, { Express, json, urlencoded } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
