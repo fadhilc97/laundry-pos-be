@@ -10,8 +10,12 @@ import { Router } from "express";
 
 const productRouter = Router();
 
-productRouter.use(authMiddleware, roleMiddleware(Role.OWNER));
+productRouter.use(authMiddleware);
+
+productRouter.use(roleMiddleware(Role.OWNER, Role.STAFF));
 productRouter.get("/", getListProductController);
+
+productRouter.use(roleMiddleware(Role.OWNER));
 productRouter.post("/", postCreateProductController);
 productRouter.put("/:id", putUpdateProductController);
 productRouter.delete("/:id", deleteProductController);
