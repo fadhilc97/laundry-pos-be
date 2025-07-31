@@ -38,9 +38,10 @@ export async function getListCustomerController(
   }).then((res) =>
     res.map((row) => ({
       ...row,
-      whatsappPhone: row.customerContacts.find(
-        (contact) => contact.contact.name === "WHATSAPP"
-      ),
+      whatsappPhone:
+        row.customerContacts.find(
+          (contact) => contact.contact.name === "WHATSAPP"
+        )?.contact.details || "",
     }))
   );
 
