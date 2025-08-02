@@ -1,10 +1,11 @@
-import "module-alias/register";
+import moduleAlias from "module-alias";
 import express, { Express, json, urlencoded } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import routes from "./routes";
 
+moduleAlias();
 dotenv.config();
 
 const app: Express = express();
