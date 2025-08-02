@@ -16,7 +16,11 @@ laundryRouter.post(
   roleMiddleware(Role.OWNER),
   postCreateLaundryController
 );
-laundryRouter.get("/me", roleMiddleware(Role.OWNER), getMyLaundryController);
+laundryRouter.get(
+  "/me",
+  roleMiddleware(Role.OWNER, Role.STAFF),
+  getMyLaundryController
+);
 laundryRouter.post(
   "/:id/config",
   roleMiddleware(Role.SUPER_ADMIN),
