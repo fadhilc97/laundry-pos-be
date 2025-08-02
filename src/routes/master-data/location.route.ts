@@ -10,8 +10,12 @@ import { Router } from "express";
 
 const locationRouter = Router();
 
-locationRouter.use(authMiddleware, roleMiddleware(Role.OWNER));
+locationRouter.use(authMiddleware);
+
+locationRouter.use(roleMiddleware(Role.OWNER, Role.STAFF));
 locationRouter.get("/", getListLocationController);
+
+locationRouter.use(roleMiddleware(Role.OWNER));
 locationRouter.post("/", postCreateLocationController);
 locationRouter.put("/:id", putUpdateLocationController);
 locationRouter.delete("/:id", deleteLocationController);
