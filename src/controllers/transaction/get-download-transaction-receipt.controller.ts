@@ -2,7 +2,7 @@ import { Transaction } from "@/schemas";
 import { db } from "@/services";
 import { eq } from "drizzle-orm";
 import { Request, Response } from "express";
-import path from "path";
+import { getFileStream } from "@/services";
 
 type Params = {
   id: string;
@@ -26,8 +26,13 @@ export async function getDownloadTransactionReceiptController(
     return;
   }
 
-  const fileStorePath = process.env.FILESTORE_PATH as string;
-  const pdfPath = path.join(fileStorePath, transaction?.receiptPath);
+  const receiptReadable = getFileStream(transaction.receiptPath);
 
-  res.download(pdfPath);
+  res.attachment(transaction.receiptPath);
+  receiptReadable.on("error", (err) =>
+    res
+      .status(500)
+      .json({ message: "Fail to download receipt", error: err.message })
+  );
+  receiptReadable.pipe(res);
 }

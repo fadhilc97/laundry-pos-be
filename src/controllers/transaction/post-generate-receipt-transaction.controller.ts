@@ -5,7 +5,6 @@ import { eq, sql } from "drizzle-orm";
 import { Response } from "express";
 import _ from "lodash";
 import moment from "moment";
-import path from "path";
 
 type Params = {
   id: string;
@@ -31,14 +30,17 @@ export async function generateReceiptTransaction(
     },
   });
 
-  const fileStorePath = process.env.FILESTORE_PATH as string;
   const receiptPath = `receipts/Receipt-${transaction?.transactionNo}.pdf`;
-  const pdfPath = path.join(fileStorePath, receiptPath);
   const receiptData = await getReceiptData(userId, transactionId);
-  await getHtmlToPdf<IReceiptTemplateData>("receipt", pdfPath, receiptData, {
-    width: "10cm",
-    preferCSSPageSize: true,
-  });
+  await getHtmlToPdf<IReceiptTemplateData>(
+    "receipt",
+    receiptPath,
+    receiptData,
+    {
+      width: "10cm",
+      preferCSSPageSize: true,
+    }
+  );
 
   await db
     .update(Transaction)
