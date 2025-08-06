@@ -1,0 +1,1 @@
+ALTER TABLE "QuantityUnit" ADD COLUMN "decimalPlaces" integer DEFAULT 0;
