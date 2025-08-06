@@ -5,6 +5,7 @@ export const QuantityUnit = pgTable("QuantityUnit", {
   id: serial().primaryKey(),
   name: varchar().notNull(),
   shortName: varchar().notNull(),
+  decimalPlaces: integer().default(0),
   laundryId: integer()
     .notNull()
     .references(() => Laundry.id),

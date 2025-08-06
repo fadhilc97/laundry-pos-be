@@ -1,6 +1,7 @@
 interface IQuantityUnitDto {
   name: string;
   shortName: string;
+  decimalPlaces?: number;
 }
 
 export interface IPostCreateQuantityUnitDto extends IQuantityUnitDto {}

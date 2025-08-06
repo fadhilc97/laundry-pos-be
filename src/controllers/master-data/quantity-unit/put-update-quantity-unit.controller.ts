@@ -9,11 +9,12 @@ export async function putUpdateQuantityUnitController(
   res: Response
 ) {
   const { id } = req.params as { id: string };
-  const { name, shortName }: IPutUpdateQuantityUnitDto = req.body;
+  const { name, shortName, decimalPlaces }: IPutUpdateQuantityUnitDto =
+    req.body;
 
   const updatedQuantityUnit = await db
     .update(QuantityUnit)
-    .set({ name, shortName })
+    .set({ name, shortName, decimalPlaces })
     .where(eq(QuantityUnit.id, +id));
 
   if (!updatedQuantityUnit.rowCount) {

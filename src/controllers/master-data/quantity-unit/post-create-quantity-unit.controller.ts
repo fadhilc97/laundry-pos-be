@@ -22,10 +22,12 @@ export async function postCreateQuantityUnitController(
     return;
   }
 
-  const { name, shortName }: IPostCreateQuantityUnitDto = req.body;
+  const { name, shortName, decimalPlaces }: IPostCreateQuantityUnitDto =
+    req.body;
   await db.insert(QuantityUnit).values({
     name,
     shortName,
+    decimalPlaces,
     laundryId: userLaundry?.laundryId,
   });
 
