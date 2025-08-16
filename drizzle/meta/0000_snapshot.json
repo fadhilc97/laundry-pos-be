@@ -1,6 +1,6 @@
 {
-  "id": "d7f1869a-ad85-4a79-86f9-bd8cb813b3ec",
-  "prevId": "d43cd79d-f431-484a-a99c-622eb8ebd5a2",
+  "id": "04f1d7bf-77d8-4a6c-8f73-4ba2977d35a8",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -672,6 +672,13 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "decimalPlaces": {
+          "name": "decimalPlaces",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         },
         "laundryId": {
           "name": "laundryId",

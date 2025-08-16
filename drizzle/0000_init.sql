@@ -23,12 +23,34 @@ CREATE TABLE IF NOT EXISTS "CustomerContact" (
 	"contactId" integer NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "Role" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" varchar NOT NULL,
+	"identifier" varchar NOT NULL,
+	CONSTRAINT "Role_identifier_unique" UNIQUE("identifier")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "User" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" varchar NOT NULL,
+	"email" varchar NOT NULL,
+	"password" varchar NOT NULL,
+	"imageUrl" varchar,
+	CONSTRAINT "User_email_unique" UNIQUE("email")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "UserLaundry" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"userId" integer NOT NULL,
 	"laundryId" integer NOT NULL,
 	"joinedDate" timestamp DEFAULT now() NOT NULL,
 	"isActive" boolean DEFAULT true NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "UserRole" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"userId" integer NOT NULL,
+	"roleId" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "Laundry" (
@@ -71,6 +93,7 @@ CREATE TABLE IF NOT EXISTS "QuantityUnit" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar NOT NULL,
 	"shortName" varchar NOT NULL,
+	"decimalPlaces" integer DEFAULT 0,
 	"laundryId" integer NOT NULL
 );
 --> statement-breakpoint
@@ -129,42 +152,6 @@ CREATE TABLE IF NOT EXISTS "Sequence" (
 	"laundryId" integer
 );
 --> statement-breakpoint
-ALTER TABLE "FacilityBookingItem" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "FacilityBookingPayment" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "FacilityBooking" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "ResponsibleSchema" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "Responsible" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "SportCategory" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "SportFacilityDay" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "SportFacility" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "SportFacilityTime" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "FacilityPriceItemRule" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "FacilityPriceItem" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "FacilityPriceRuleDay" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "FacilityPriceRule" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "FacilityPriceRuleTime" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "FacilityPrice" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "SportCentreContact" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "SportCentre" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-DROP TABLE "FacilityBookingItem" CASCADE;--> statement-breakpoint
-DROP TABLE "FacilityBookingPayment" CASCADE;--> statement-breakpoint
-DROP TABLE "FacilityBooking" CASCADE;--> statement-breakpoint
-DROP TABLE "ResponsibleSchema" CASCADE;--> statement-breakpoint
-DROP TABLE "Responsible" CASCADE;--> statement-breakpoint
-DROP TABLE "SportCategory" CASCADE;--> statement-breakpoint
-DROP TABLE "SportFacilityDay" CASCADE;--> statement-breakpoint
-DROP TABLE "SportFacility" CASCADE;--> statement-breakpoint
-DROP TABLE "SportFacilityTime" CASCADE;--> statement-breakpoint
-DROP TABLE "FacilityPriceItemRule" CASCADE;--> statement-breakpoint
-DROP TABLE "FacilityPriceItem" CASCADE;--> statement-breakpoint
-DROP TABLE "FacilityPriceRuleDay" CASCADE;--> statement-breakpoint
-DROP TABLE "FacilityPriceRule" CASCADE;--> statement-breakpoint
-DROP TABLE "FacilityPriceRuleTime" CASCADE;--> statement-breakpoint
-DROP TABLE "FacilityPrice" CASCADE;--> statement-breakpoint
-DROP TABLE "SportCentreContact" CASCADE;--> statement-breakpoint
-DROP TABLE "SportCentre" CASCADE;--> statement-breakpoint
-ALTER TABLE "User" DROP CONSTRAINT "User_centreId_SportCentre_id_fk";
---> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "Contact" ADD CONSTRAINT "Contact_laundryId_Laundry_id_fk" FOREIGN KEY ("laundryId") REFERENCES "public"."Laundry"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
@@ -197,6 +184,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "UserLaundry" ADD CONSTRAINT "UserLaundry_laundryId_Laundry_id_fk" FOREIGN KEY ("laundryId") REFERENCES "public"."Laundry"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userId_User_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_roleId_Role_id_fk" FOREIGN KEY ("roleId") REFERENCES "public"."Role"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -308,7 +307,3 @@ DO $$ BEGIN
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
---> statement-breakpoint
-ALTER TABLE "User" DROP COLUMN IF EXISTS "centreId";--> statement-breakpoint
-ALTER TABLE "Role" ADD CONSTRAINT "Role_identifier_unique" UNIQUE("identifier");--> statement-breakpoint
-ALTER TABLE "User" ADD CONSTRAINT "User_email_unique" UNIQUE("email");

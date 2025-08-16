@@ -3,17 +3,10 @@
   "dialect": "postgresql",
   "entries": [
     {
-      "idx": 1,
+      "idx": 0,
       "version": "7",
-      "when": 1753105344915,
-      "tag": "0001_init",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1754489414831,
-      "tag": "0002_quantity_unit_add_decimal_places_column",
+      "when": 1755313489590,
+      "tag": "0000_init",
       "breakpoints": true
     }
   ]
