@@ -2,7 +2,7 @@ import { hash } from "bcrypt";
 import { User } from "@/schemas";
 import { db } from "@/services";
 
-async function main() {
+export async function main() {
   const encryptedPassword = await hash(
     process.env.INITIAL_SUPER_ADMIN_PASSWORD as string,
     10
@@ -19,5 +19,3 @@ async function main() {
 
   console.log("02-user.ts seeded 🌱");
 }
-
-main();

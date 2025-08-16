@@ -1,7 +1,7 @@
 import { db } from "@/services";
 import { Role } from "@/schemas";
 
-async function main() {
+export async function main() {
   await db
     .insert(Role)
     .values([
@@ -22,5 +22,3 @@ async function main() {
 
   console.log("01-role.ts seeded 🌱");
 }
-
-main();

@@ -4,6 +4,7 @@
   "description": "Laundry Cashier System (POS) for Backend side",
   "main": "dist/app.js",
   "scripts": {
+    "seed": "tsx src/seeders/index.ts",
     "build": "npx tsc && npx cpx \"src/**/*.hbs\" dist",
     "start": "node dist/app.js",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts"

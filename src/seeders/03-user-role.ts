@@ -2,7 +2,7 @@ import { Role, User, UserRole } from "@/schemas";
 import { db } from "@/services";
 import { eq } from "drizzle-orm";
 
-async function main() {
+export async function main() {
   const superAdminRole = await db.query.Role.findFirst({
     where: eq(Role.identifier, "SUPER_ADMIN"),
   });
@@ -26,5 +26,3 @@ async function main() {
 
   console.log("03-user-role.ts seeded 🌱");
 }
-
-main();
