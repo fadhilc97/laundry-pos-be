@@ -20,8 +20,6 @@ export async function postCreateUserController(
     },
   });
 
-  // 1. Validation rules
-
   if (roles.some((role) => role.identifier === RoleEnum.SUPER_ADMIN)) {
     res
       .status(400)
@@ -42,11 +40,8 @@ export async function postCreateUserController(
     return;
   }
 
-  // 2. Logic
-
   const encryptedPassword = await hash(password, 10);
   await db.transaction(async (tx) => {
-    // 2.1. Create user name, email and password
     const [createdUser] = await tx
       .insert(User)
       .values({
@@ -56,7 +51,6 @@ export async function postCreateUserController(
       })
       .returning({ id: User.id });
 
-    // 2.2. Connect the created user to laundry
     if (laundryId) {
       await tx.insert(UserLaundry).values({
         userId: createdUser.id,
@@ -64,7 +58,6 @@ export async function postCreateUserController(
       });
     }
 
-    // 2.3. Connect the created user to roles
     await tx.insert(UserRole).values(
       roleIds.map((roleId) => ({
         userId: createdUser.id,
