@@ -3,6 +3,7 @@ import { db } from "@/services";
 import { IAuthRequest } from "@/utils";
 import { notInArray } from "drizzle-orm";
 import { Role } from "@/schemas";
+import { Role as RoleEnum } from "@/utils";
 
 export async function getListRoleController(req: IAuthRequest, res: Response) {
   const userRoles = req.userRoles || [];
@@ -12,7 +13,7 @@ export async function getListRoleController(req: IAuthRequest, res: Response) {
       id: true,
       name: true,
     },
-    where: notInArray(Role.identifier, userRoles),
+    where: notInArray(Role.identifier, [...userRoles, RoleEnum.SUPER_ADMIN]),
   });
 
   res.status(200).json({
