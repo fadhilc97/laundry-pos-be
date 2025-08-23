@@ -3,12 +3,10 @@ import { Response } from "express";
 import { db } from "@/services";
 import { eq, notInArray } from "drizzle-orm";
 import { Role, User, UserRole } from "@/schemas";
+import { Role as RoleEnum } from "@/utils";
 
 export async function getUserlistController(req: IAuthRequest, res: Response) {
-  const superAdminRole = await db.query.Role.findFirst({
-    where: eq(Role.identifier, "SUPER_ADMIN"),
-    columns: { id: true },
-  });
+  const userRoles = req.userRoles || [];
 
   const users = await db
     .select({
@@ -20,7 +18,8 @@ export async function getUserlistController(req: IAuthRequest, res: Response) {
     })
     .from(User)
     .innerJoin(UserRole, eq(User.id, UserRole.userId))
-    .innerJoin(Role, eq(UserRole.roleId, Role.id));
+    .innerJoin(Role, eq(UserRole.roleId, Role.id))
+    .where(notInArray(Role.identifier, [...userRoles, RoleEnum.SUPER_ADMIN]));
 
   const result = users.reduce<
     Record<
