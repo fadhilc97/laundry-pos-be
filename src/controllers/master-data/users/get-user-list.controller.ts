@@ -1,13 +1,10 @@
 import { IAuthRequest } from "@/utils";
 import { Response } from "express";
 import { db } from "@/services";
-import { eq, notInArray, not } from "drizzle-orm";
+import { eq, not } from "drizzle-orm";
 import { Role, User, UserRole } from "@/schemas";
-import { Role as RoleEnum } from "@/utils";
 
 export async function getUserlistController(req: IAuthRequest, res: Response) {
-  const userRoles = req.userRoles || [];
-
   const users = await db
     .select({
       id: User.id,
