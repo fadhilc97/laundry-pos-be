@@ -3,6 +3,7 @@ import {
   getMyLaundryController,
   postCreateLaundryConfigController,
   putUpdateLaundryConfigController,
+  putUpdateMyLaundryController,
 } from "@/controllers";
 import { authMiddleware, roleMiddleware } from "@/middlewares";
 import { Role } from "@/utils";
@@ -20,6 +21,11 @@ laundryRouter.get(
   "/me",
   roleMiddleware(Role.OWNER, Role.STAFF),
   getMyLaundryController
+);
+laundryRouter.put(
+  "/me",
+  roleMiddleware(Role.OWNER),
+  putUpdateMyLaundryController
 );
 laundryRouter.post(
   "/:id/config",
