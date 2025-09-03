@@ -61,7 +61,6 @@ export async function postCreateUserController(
       .returning({ id: User.id });
 
     if (tempLaundryId) {
-      console.log({ userId: createdUser.id, tempLaundryId });
       await tx.insert(UserLaundry).values({
         userId: createdUser.id,
         laundryId: tempLaundryId,
