@@ -2,7 +2,7 @@ import { hash } from "bcrypt";
 import { Role, User, UserLaundry, UserRole } from "@/schemas";
 import { db } from "@/services";
 import { IAuthRequest, IPostCreateUserDto, Role as RoleEnum } from "@/utils";
-import { inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { Response } from "express";
 
 export async function postCreateUserController(
@@ -32,12 +32,21 @@ export async function postCreateUserController(
     return;
   }
 
-  if (
-    userRoles?.includes(RoleEnum.OWNER) &&
-    roles.some((role) => role.identifier === RoleEnum.OWNER)
-  ) {
-    res.status(400).json({ message: "You're unable to create owner user" });
-    return;
+  let tempLaundryId = laundryId;
+  if (userRoles?.includes(RoleEnum.OWNER)) {
+    if (roles.some((role) => role.identifier === RoleEnum.OWNER)) {
+      res.status(400).json({ message: "You're unable to create owner user" });
+      return;
+    }
+    if (!tempLaundryId) {
+      const userLaundry = await db.query.UserLaundry.findFirst({
+        where: eq(UserLaundry.userId, req.userId as number),
+        columns: { laundryId: true },
+      });
+      if (userLaundry) {
+        tempLaundryId = userLaundry.laundryId;
+      }
+    }
   }
 
   const encryptedPassword = await hash(password, 10);
@@ -51,10 +60,11 @@ export async function postCreateUserController(
       })
       .returning({ id: User.id });
 
-    if (laundryId) {
+    if (tempLaundryId) {
+      console.log({ userId: createdUser.id, tempLaundryId });
       await tx.insert(UserLaundry).values({
         userId: createdUser.id,
-        laundryId,
+        laundryId: tempLaundryId,
       });
     }
 
