@@ -12,6 +12,7 @@ export async function getListRoleController(req: IAuthRequest, res: Response) {
     columns: {
       id: true,
       name: true,
+      identifier: true,
     },
     where: notInArray(Role.identifier, [...userRoles, RoleEnum.SUPER_ADMIN]),
   });
