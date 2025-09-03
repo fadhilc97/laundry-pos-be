@@ -1,10 +1,23 @@
 import { IAuthRequest } from "@/utils";
 import { Response } from "express";
 import { db } from "@/services";
-import { eq, not } from "drizzle-orm";
-import { Role, User, UserRole } from "@/schemas";
+import { eq, not, and } from "drizzle-orm";
+import { Role as RoleEnum } from "@/utils";
+import { Role, User, UserLaundry, UserRole } from "@/schemas";
 
 export async function getUserlistController(req: IAuthRequest, res: Response) {
+  const userLaundry = await db.query.UserLaundry.findFirst({
+    where: eq(UserLaundry.userId, req.userId as number),
+    columns: {
+      laundryId: true,
+    },
+  });
+
+  const ownerConditions = [
+    eq(Role.identifier, RoleEnum.STAFF),
+    eq(UserLaundry.laundryId, userLaundry?.laundryId as number),
+  ];
+
   const users = await db
     .select({
       id: User.id,
@@ -16,7 +29,13 @@ export async function getUserlistController(req: IAuthRequest, res: Response) {
     .from(User)
     .leftJoin(UserRole, eq(User.id, UserRole.userId))
     .leftJoin(Role, eq(UserRole.roleId, Role.id))
-    .where(not(eq(User.id, req.userId as number)));
+    .leftJoin(UserLaundry, eq(User.id, UserLaundry.userId))
+    .where(
+      and(
+        not(eq(User.id, req.userId as number)),
+        ...(req.userRoles?.includes(RoleEnum.OWNER) ? ownerConditions : [])
+      )
+    );
 
   const result = users.reduce<
     Record<
