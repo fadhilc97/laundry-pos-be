@@ -22,7 +22,7 @@ export async function putInactiveUserController(
   });
 
   if (userRoles?.includes(Role.STAFF)) {
-    res.status(403).json({ message: "Unable to do this action for staff." });
+    res.status(422).json({ message: "Unable to do this action for staff." });
     return;
   }
 
@@ -31,7 +31,7 @@ export async function putInactiveUserController(
     !queryUserRoles.some((role) => role.role.identifier === Role.STAFF)
   ) {
     res
-      .status(403)
+      .status(422)
       .json({ message: "You only able to inactive the staff user." });
     return;
   }
@@ -41,7 +41,7 @@ export async function putInactiveUserController(
     !queryUserRoles.some((role) => role.role.identifier === Role.OWNER)
   ) {
     res
-      .status(403)
+      .status(422)
       .json({ message: "You only able to inactive the owner user." });
     return;
   }
