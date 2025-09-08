@@ -1,8 +1,11 @@
 import { IUserJwtPayload, IAuthRequest } from "@/utils";
+import { db } from "@/services";
 import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { eq } from "drizzle-orm";
+import { UserLaundry } from "@/schemas";
 
-export function authMiddleware(
+export async function authMiddleware(
   req: IAuthRequest,
   res: Response,
   next: NextFunction
@@ -21,6 +24,17 @@ export function authMiddleware(
     const decoded = jwt.verify(token, secret) as IUserJwtPayload;
     req.userId = decoded.id;
     req.userRoles = decoded.roles;
+
+    const userLaundry = await db.query.UserLaundry.findFirst({
+      where: eq(UserLaundry.userId, decoded.id),
+      columns: { isActive: true },
+    });
+
+    if (!userLaundry?.isActive) {
+      res.status(403).json({ message: "You're inactive" });
+      return;
+    }
+
     next();
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
