@@ -3,6 +3,7 @@ import {
   getUserlistController,
   putUpdateUserController,
   getUserDetailController,
+  putInactiveUserController,
 } from "@/controllers";
 import { authMiddleware, roleMiddleware } from "@/middlewares";
 import { Role } from "@/utils";
@@ -15,5 +16,6 @@ userRouter.get("/", getUserlistController);
 userRouter.get("/:userId", getUserDetailController);
 userRouter.post("/", postCreateUserController);
 userRouter.put("/:userId", putUpdateUserController);
+userRouter.put("/:userId/inactive", putInactiveUserController);
 
 export default userRouter;

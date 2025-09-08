@@ -25,6 +25,7 @@ export async function getUserlistController(req: IAuthRequest, res: Response) {
       email: User.email,
       userRole: UserRole,
       role: Role,
+      isActive: UserLaundry.isActive,
     })
     .from(User)
     .leftJoin(UserRole, eq(User.id, UserRole.userId))
@@ -44,12 +45,19 @@ export async function getUserlistController(req: IAuthRequest, res: Response) {
         id: number;
         name: string;
         email: string;
+        isActive: boolean;
         roles: { id?: number; name?: string }[];
       }
     >
   >((acc, row) => {
     if (!acc[row.id]) {
-      acc[row.id] = { id: row.id, name: row.name, email: row.email, roles: [] };
+      acc[row.id] = {
+        id: row.id,
+        name: row.name,
+        email: row.email,
+        isActive: row.isActive || false,
+        roles: [],
+      };
     }
 
     if (row.userRole) {
