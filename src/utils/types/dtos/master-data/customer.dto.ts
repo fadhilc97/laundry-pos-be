@@ -10,5 +10,7 @@ interface ICustomerContactDto {
 export interface IPostCreateCustomerDto
   extends ICustomerDto,
     ICustomerContactDto {}
-export interface IPutUpdateCustomerDto extends ICustomerDto {}
+export interface IPutUpdateCustomerDto
+  extends ICustomerDto,
+    ICustomerContactDto {}
 export interface IPutUpdateCustomerContactDto extends ICustomerContactDto {}

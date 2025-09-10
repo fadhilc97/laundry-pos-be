@@ -25,7 +25,15 @@ export async function getDetailCustomerController(req: Request, res: Response) {
     where: eq(Customer.id, +id),
   });
 
-  res
-    .status(200)
-    .json({ message: "Success get customer details", data: customer });
+  const customerContact = customer?.customerContacts.find(
+    (contact) => contact.contact.name === "WHATSAPP"
+  );
+
+  const data = {
+    name: customer?.name,
+    address: customer?.address,
+    whatsappPhone: customerContact?.contact.details,
+  };
+
+  res.status(200).json({ message: "Success get customer details", data });
 }
