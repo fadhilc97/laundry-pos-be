@@ -38,4 +38,8 @@ export const ProductRelations = relations(Product, ({ one }) => ({
     fields: [Product.qtyUnitId],
     references: [QuantityUnit.id],
   }),
+  currency: one(Currency, {
+    fields: [Product.currencyId],
+    references: [Currency.id],
+  }),
 }));

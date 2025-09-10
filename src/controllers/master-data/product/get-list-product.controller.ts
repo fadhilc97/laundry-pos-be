@@ -40,6 +40,9 @@ export async function getListProductController(
       quantityUnit: {
         columns: { shortName: true, id: true, decimalPlaces: true },
       },
+      currency: {
+        columns: { symbol: true },
+      },
     },
   });
 
