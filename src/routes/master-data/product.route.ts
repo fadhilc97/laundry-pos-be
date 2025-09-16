@@ -5,6 +5,7 @@ import {
   postCreateProductController,
   putUpdateProductController,
   deleteProductController,
+  getDetailsProductController,
 } from "@/controllers";
 import { Router } from "express";
 
@@ -14,6 +15,7 @@ productRouter.use(authMiddleware);
 
 productRouter.use(roleMiddleware(Role.OWNER, Role.STAFF));
 productRouter.get("/", getListProductController);
+productRouter.get("/:id", getDetailsProductController);
 
 productRouter.use(roleMiddleware(Role.OWNER));
 productRouter.post("/", postCreateProductController);
