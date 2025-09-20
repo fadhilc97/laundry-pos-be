@@ -1,49 +1,103 @@
-# Laundry POS (Backend)
+# Laundry POS (Back-end)
 
-## Current Business Flow
+## Overview
 
-- Stage 1 diagram
+The project specification described [here](./docs/overview.md)
 
-  ![](./docs/current-flow-diagram-stage-1.png)
+### Getting started
 
-- Stage 2 diagram
+#### Tech stacks
 
-  ![](./docs/current-flow-diagram-stage-2.png)
+- Node v20 (LTS) or later
+- PostgresSQL 17 or later
 
-## The Problems
+#### Pre-requisites
 
-- Sometimes, the laundry left behind some clothes that want to the next process, so it not proper the sequence and the priority
-- Sometimes, the laundry forgot the finished clothes location when the customer want to picking-up
+- Create database and define it later in `.env` file
+- For file integration to Google Cloud purpose, require the following setup in your Google Cloud:
+  - Google Cloud Platform (GCP) setup:
+    - Project ID
+    - Private Key ID
+    - Client email
+    - Private key
+  - Google Cloud Storage (GCS) setup:
+    - Bucket name
 
-## The Solutions
+#### Steps
 
-- Need a system to remaind the estimation of clothes process based on the duration that choosen by the customer, so the laundry can order the priority to be finished
-- Need a system to update the status of the clothes, so the customer will get the notification regarding the status. The customer also can track the status using provided public webpage (seems like logistic tracking)
-- Need a system for the laundry to set the location for the finished the clothes process, so the laundry can be find easily where the finished clothes they area putted in when the customer want to picking-up
+- Clone this project to your local environment
+- Duplicate the `.env.example` file to `.env`
 
-## Software Requirement Specification (SRS)
+  ```env
+  # Environment = DEVELOPMENT | PRODUCTION
+  NODE_ENV=
 
-### Functional Requirements
+  # Back-end Application Port (Default = 3000)
+  PORT=
 
-- System able to create new transaction
-- System able to search the transaction
-- System able to create payment in transaction
-- System able to print the receipt in transaction
-- System able to update the clothes status in transaction
-- System able to set the finished clothe location once the process in completed
-- System able to conclude the transaction by set the pick-up date
+  # PostgreSQL database connection
+  DATABASE_URL=postgresql://role:password@hostname:port/db_name
 
-![System Flow Diagram Stage 1](./docs/system-flow-diagram-stage-1.jpg)
+  # JWT Secrets (Can use the random string generator, e.g. using openssl CLI)
+  AUTH_ACCESS_TOKEN_JWT_SECRET=
+  AUTH_REFRESH_TOKEN_JWT_SECRET=
 
-![System Flow Diagram Stage 2](./docs/system-flow-diagram-stage-2.jpg)
+  # Initial super admin user role account
+  INITIAL_SUPER_ADMIN_EMAIL=
+  INITIAL_SUPER_ADMIN_PASSWORD=
 
-### Non-functional Requirements
+  # GCP integration
+  GCP_PROJECT_ID=
+  GCP_PRIVATE_KEY_ID=
+  GCP_CLIENT_EMAIL=
+  GCP_PRIVATE_KEY=
 
-- System able to support another language:
-  - English (default)
-  - Indonesia
-- System compatible for responsiveness in any screen sizes
+  # Google Cloud Storage Bucket
+  GCS_BUCKET_NAME=
 
-### Database Diagram
+  # Front-end CORS setup
+  LOCAL_FE_URL=
+  BETA_FE_URL=
+  ```
 
-![Database Diagram](./docs/database-diagram.png)
+- Run the following commands:
+
+  - Database migration
+
+    ```bash
+    # Using npx
+    $ npx drizzle-kit migrate
+
+    # Using pnpm
+    $ pnpm drizzle-kit migrate
+    ```
+
+  - Initial data seeders
+
+    ```bash
+    # Using npx
+    $ npm run seed
+
+    # Using pnpm
+    $ pnpm seed
+    ```
+
+  - Install dependencies
+
+    ```bash
+    # Using npx
+    $ npm i
+
+    # Using pnpm
+    $ pnpm i
+    ```
+
+  - Run the project
+
+    ```bash
+    # Using npx
+    $ npm run dev
+
+    # Using pnpm
+    $ pnpm dev
+    ```
