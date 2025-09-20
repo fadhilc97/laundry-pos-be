@@ -13,6 +13,7 @@ export async function authMiddleware(
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {
+    res.clearCookie("refreshToken");
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
@@ -37,6 +38,7 @@ export async function authMiddleware(
 
     next();
   } catch (error) {
+    res.clearCookie("refreshToken");
     res.status(401).json({ message: "Unauthorized" });
   }
 }
