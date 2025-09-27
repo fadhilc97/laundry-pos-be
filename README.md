@@ -75,7 +75,7 @@ The project specification described [here](./docs/overview.md)
   - Initial data seeders
 
     ```bash
-    # Using npx
+    # Using npm
     $ npm run seed
 
     # Using pnpm
@@ -85,7 +85,7 @@ The project specification described [here](./docs/overview.md)
   - Install dependencies
 
     ```bash
-    # Using npx
+    # Using npm
     $ npm i
 
     # Using pnpm
@@ -95,7 +95,7 @@ The project specification described [here](./docs/overview.md)
   - Run the project
 
     ```bash
-    # Using npx
+    # Using npm
     $ npm run dev
 
     # Using pnpm
